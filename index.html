@@ -13,16 +13,12 @@
     background: #000;
     font-family: monospace;
     color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     overflow: hidden;
     perspective: 1000px;
-    flex-direction: column;
   }
 
-  #time { position: absolute; top: 20px; font-size: 24px; letter-spacing: 1px; }
-  #domain { position: absolute; top: 60px; font-size: 22px; letter-spacing: 1px; }
+  #time { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; letter-spacing: 1px; }
+  #domain { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 22px; letter-spacing: 1px; }
 
   .container {
     width: 90%;
@@ -39,6 +35,10 @@
     overflow-wrap: break-word;
     transform-style: preserve-3d;
     transition: transform 0.05s ease-out;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .avatar {
@@ -60,16 +60,21 @@
     margin-left: 2px;
   }
 
-  @keyframes blink {
-    0%,50%,100%{opacity:1;}
-    25%,75%{opacity:0;}
+  .floating-text {
+    position: absolute;
+    font-size: 14px;
+    opacity: 0.7;
+    white-space: nowrap;
   }
 
+  @keyframes blink { 0%,50%,100%{opacity:1;} 25%,75%{opacity:0;} }
+
   @media(max-width:600px){
-    #time { font-size: 20px; }
-    #domain { font-size: 18px; }
+    #time { font-size: 18px; }
+    #domain { font-size: 16px; }
     .container { font-size: 16px; padding: 15px 20px; }
     .avatar { width: 100px; height: 100px; }
+    .floating-text { font-size: 12px; }
   }
 </style>
 </head>
@@ -87,48 +92,37 @@
 
 <script>
 // ------------------------
-// Медленная печать текста
+// Основной контейнерный текст
 // ------------------------
-const text = `Discord: @yoshuanew
+const mainText = `Discord: @yoshuanew
 Telegram: @YoshuaNew
 TikTok: https://www.tiktok.com/@yoshhhua
-Roblox Game 1: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
+Roblox Game: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
 Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
-Fun Fact: I love coding at night.
-Random Info: My favorite number is 42.
-Extra: Coffee is my fuel.
-Note: I sometimes forget to sleep.
-Trivia: Cats are secretly plotting.
-Misc: Music is life.
-Fact: I once coded a website in 3 hours.
-Tidbit: I enjoy minimalistic design.
-Info: Always learning new things.
 `;
 
 const containerText = document.getElementById('text');
 let i = 0;
 const speed = 25;
-
 const cursor = document.createElement('span');
 cursor.className = 'cursor';
 cursor.innerHTML = ' ';
 containerText.appendChild(cursor);
 
 function typeWriter() {
-  if(i < text.length){
-    containerText.insertBefore(document.createTextNode(text.charAt(i)), cursor);
+  if(i < mainText.length){
+    containerText.insertBefore(document.createTextNode(mainText.charAt(i)), cursor);
     i++;
     setTimeout(typeWriter, speed);
-    containerText.scrollTop = containerText.scrollHeight;
   }
 }
 typeWriter();
 
 // ------------------------
-// Домен с эффектом печати и удаления
+// Домен
 // ------------------------
 const domainElem = document.getElementById('domain');
-const domains = ["YoshuaNew", "YO_SHUAnew", "YOSHUAnew", "Yoshuaaa", "Makar_1706k", "Yoshua__aaNew_ww_"];
+const domains = ["YoshuaNew", "YO_SHUAnew", "YOSHUAnew", "Yoshuaaa"];
 let domainIndex = 0;
 
 function typeDomain(text, callback){
@@ -152,9 +146,7 @@ function eraseDomain(text, callback){
       domainElem.textContent = text.substring(0,pos) + "_";
       pos--;
       setTimeout(removeChar, 80);
-    } else {
-      callback();
-    }
+    } else callback();
   }
   removeChar();
 }
@@ -168,7 +160,7 @@ function nextDomain(){
 nextDomain();
 
 // ------------------------
-// Время с эффектом печати
+// Время
 // ------------------------
 const timeElem = document.getElementById('time');
 
@@ -179,9 +171,7 @@ function typeTime(text, callback){
       timeElem.textContent = text.substring(0,pos);
       pos++;
       setTimeout(addChar, 80);
-    } else {
-      setTimeout(() => eraseTime(text, callback), 400);
-    }
+    } else setTimeout(() => eraseTime(text, callback), 400);
   }
   addChar();
 }
@@ -193,9 +183,7 @@ function eraseTime(text, callback){
       timeElem.textContent = text.substring(0,pos);
       pos--;
       setTimeout(removeChar, 50);
-    } else {
-      callback();
-    }
+    } else callback();
   }
   removeChar();
 }
@@ -205,14 +193,12 @@ function updateTimeLoop(){
   let h = String(now.getHours()).padStart(2,"0");
   let m = String(now.getMinutes()).padStart(2,"0");
   let s = String(now.getSeconds()).padStart(2,"0");
-  const currentTime = `${h}:${m}:${s}`;
-  typeTime(currentTime, updateTimeLoop);
+  typeTime(`${h}:${m}:${s}`, updateTimeLoop);
 }
-
 updateTimeLoop();
 
 // ------------------------
-// Вращение контейнера за мышкой
+// Вращение контейнера
 // ------------------------
 const container = document.getElementById('container');
 document.addEventListener('mousemove', e => {
@@ -222,9 +208,49 @@ document.addEventListener('mousemove', e => {
   const deltaY = e.clientY - centerY;
   const rotateX = (-deltaY/25).toFixed(2);
   const rotateY = (deltaX/25).toFixed(2);
-  container.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  container.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 });
-</script>
 
+// ------------------------
+// Плавающая "неважная" информация
+// ------------------------
+const floatingInfo = [
+  "Fun Fact: I love coding at night.",
+  "Random Info: My favorite number is 42.",
+  "Extra: Coffee is my fuel.",
+  "Note: I sometimes forget to sleep.",
+  "Trivia: Cats are secretly plotting.",
+  "Misc: Music is life.",
+  "Fact: I once coded a website in 3 hours.",
+  "Tidbit: I enjoy minimalistic design.",
+  "Info: Always learning new things.",
+  "Debug: Testing floating text.",
+  "Random: Space is infinite."
+];
+
+function spawnFloatingText(){
+  floatingInfo.forEach(text => {
+    const span = document.createElement('span');
+    span.className = 'floating-text';
+    span.style.left = Math.random()*window.innerWidth + "px";
+    span.style.top = Math.random()*window.innerHeight + "px";
+    document.body.appendChild(span);
+    typeFloatingText(span, text, 0);
+  });
+}
+
+function typeFloatingText(span, text, idx){
+  if(idx <= text.length){
+    span.textContent = text.substring(0, idx) + "_";
+    setTimeout(() => typeFloatingText(span, text, idx+1), 50 + Math.random()*50);
+  } else {
+    setTimeout(() => span.remove(), 5000 + Math.random()*5000); // исчезает через случайное время
+  }
+}
+
+// Спавним плавающий текст каждые 1.5 секунды
+setInterval(spawnFloatingText, 1500);
+
+</script>
 </body>
 </html>
