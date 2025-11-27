@@ -11,18 +11,31 @@ body, html {
   font-family: monospace;
   color: #fff;
   overflow: hidden;
-  perspective: 1000px;
-  background: linear-gradient(120deg, #0f0f0f, #1a1a1a, #0f0f0f);
-  background-size: 600% 600%;
-  animation: gradientMove 25s ease infinite;
   display: flex; justify-content: center; align-items: center;
-}
-@keyframes gradientMove {
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
+  perspective: 1000px;
+  background: #000;
 }
 
+/* Плавный градиент фона */
+@keyframes bgFade {
+  0% { background-color: #000; }
+  50% { background-color: #222; }
+  100% { background-color: #000; }
+}
+body {
+  animation: bgFade 30s ease infinite;
+}
+
+/* Canvas для мягких точек */
+#particles {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Enter Button */
 #enterBtn {
   padding: 15px 35px;
   font-size: 20px;
@@ -36,6 +49,8 @@ body, html {
   letter-spacing: 1px;
   transition: all 0.3s ease;
   animation: pulse 2s infinite;
+  position: relative;
+  z-index: 1;
 }
 #enterBtn:hover {
   background: rgba(255,255,255,0.25);
@@ -48,13 +63,10 @@ body, html {
   100%{box-shadow:0 0 10px rgba(255,255,255,0.2);}
 }
 
-#time, #domain { position: absolute; left: 50%; transform: translateX(-50%); letter-spacing: 1px;}
-#time{ top:20px; font-size:24px;}
-#domain{ top:60px; font-size:22px;}
-
+/* Контейнер */
 .container{
   width: 80%; max-width: 650px;
-  padding: 20px 20px;
+  padding: 20px;
   border-radius: 18px;
   background: rgba(0,0,0,0.4);
   backdrop-filter: blur(12px);
@@ -66,8 +78,8 @@ body, html {
   position: absolute; top:50%; left:50%; transform: translate(-50%,-50%);
   display:none;
   opacity:0;
+  z-index: 1;
 }
-
 .container.show{
   display:block;
   opacity:1;
@@ -80,17 +92,41 @@ body, html {
   box-shadow:0 0 20px rgba(255,255,255,0.2);
 }
 
+/* Курсор для печати */
 .cursor{ display:inline-block; width:10px; background-color:white; animation: blink 1s infinite; vertical-align:bottom; margin-left:2px;}
 @keyframes blink{0%,50%,100%{opacity:1;}25%,75%{opacity:0;}}
 
-.link-btn { display:inline-block; margin:5px 10px 0 0; padding:6px 12px; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.3); border-radius:8px; cursor:pointer; text-decoration:none; transition: all 0.2s; }
-.link-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6); }
+/* Кнопки */
+.link-btn {
+  display: inline-block;
+  margin: 8px 12px 0 0;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fff;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.2);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+  perspective: 1000px;
+}
+.link-btn:hover { transform: translateY(-3px) rotateX(2deg); box-shadow:0 6px 20px rgba(0,0,0,0.5);}
+.link-btn:active { transform: translateY(1px) rotateX(0deg); box-shadow:0 3px 8px rgba(0,0,0,0.4); }
 
-.floating-text{ position:absolute; font-size:14px; opacity:0.7; white-space:nowrap; background: rgba(0,0,0,0.2); padding:2px 5px; border-radius:5px; }
+.link-btn.tiktok{ background: linear-gradient(45deg, #69C9D0, #EE1D52); border:none; }
+.link-btn.roblox{ background: linear-gradient(45deg, #FF0000, #CC0000); border:none; }
+.link-btn.group{ background: linear-gradient(45deg, #1E90FF, #00BFFF); border:none; }
 
+#time, #domain { position: absolute; left:50%; transform:translateX(-50%); letter-spacing:1px; z-index:1; }
+#time{ top:20px; font-size:24px;}
+#domain{ top:60px; font-size:22px;}
+
+.floating-text{ position:absolute; font-size:14px; opacity:0.7; white-space:nowrap; background: rgba(0,0,0,0.2); padding:2px 5px; border-radius:5px; z-index:1; }
 @media(max-width:600px){
   #time{font-size:18px;} #domain{font-size:16px;}
-  .container{font-size:16px; padding:15px 15px;}
+  .container{font-size:16px; padding:15px;}
   .avatar{width:90px;height:90px;}
   .floating-text{font-size:12px;}
   .link-btn{font-size:14px; padding:4px 8px;}
@@ -99,6 +135,7 @@ body, html {
 </head>
 <body>
 
+<canvas id="particles"></canvas>
 <button id="enterBtn">Click to Enter</button>
 
 <div id="time"></div>
@@ -108,21 +145,43 @@ body, html {
   <div class="avatar"></div>
   <div id="text"></div>
   <div id="links">
-    <a href="https://www.tiktok.com/@yoshhhua" target="_blank" class="link-btn">TikTok</a>
-    <a href="https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH" target="_blank" class="link-btn">Roblox Game</a>
-    <a href="https://www.roblox.com/communities/823010003/Osmium-Studio#!/about" target="_blank" class="link-btn">Roblox Group</a>
+    <a href="https://www.tiktok.com/@yoshhhua" target="_blank" class="link-btn tiktok">TikTok</a>
+    <a href="https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH" target="_blank" class="link-btn roblox">Roblox Game</a>
+    <a href="https://www.roblox.com/communities/823010003/Osmium-Studio#!/about" target="_blank" class="link-btn group">Group</a>
   </div>
 </div>
 
 <audio id="music" src="dabbackwood — сейджуро акаши 2) (www.lightaudio.ru) (1).mp3" loop></audio>
 
 <script>
-// ---------------- Типинг с ошибками ----------------
+// ---------------------- Canvas particles ----------------------
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+const particles = [];
+for(let i=0;i<100;i++){
+  particles.push({ x:Math.random()*canvas.width, y:Math.random()*canvas.height, size:Math.random()*2+1, alpha:Math.random()*0.5+0.1 });
+}
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(let p of particles){
+    ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fill();
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+
+// ---------------- Typing effect ----------------
 function typeErase(elem,text,speed=50,callback=()=>{}){
   let pos=0;
   function typeChar(){
     if(pos<text.length){
-      if(Math.random()<0.1 && pos>0){
+      if(Math.random()<0.08 && pos>0){
         elem.textContent+=String.fromCharCode(33+Math.floor(Math.random()*94));
         setTimeout(()=>{elem.textContent=elem.textContent.slice(0,-1); setTimeout(typeChar,speed);},speed*2);
       } else {elem.textContent+=text.charAt(pos); pos++; setTimeout(typeChar,speed);}
@@ -158,7 +217,7 @@ Roblox Game: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
 Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about`;
 function typeCentral(){ typeErase(textElem,centralText,30,()=>{ setTimeout(typeCentral,2000);});}
 
-// ---------------- Container Movement ----------------
+// ---------------- Container movement ----------------
 const container = document.getElementById('container');
 document.addEventListener('mousemove',e=>{
   const centerX=window.innerWidth/2, centerY=window.innerHeight/2;
