@@ -6,85 +6,62 @@
 <title>YoshuaNew</title>
 <style>
 body, html {
-  margin:0; padding:0;
-  width:100%; height:100%;
-  background:#000;
+  margin:0;
+  padding:0;
   font-family: monospace;
+  background:#000;
   color:#fff;
-  overflow:hidden;
-  display:flex; justify-content:center; align-items:center;
-  perspective:1000px;
+  overflow-x:hidden;
 }
 
-/* Canvas для частиц */
-#particles {
-  position:fixed; top:0; left:0; width:100%; height:100%;
-  pointer-events:none; z-index:0;
-}
-
-/* Enter Button */
-#enterBtn {
-  padding:12px 28px;
-  font-size:20px;
+/* Кнопка старта */
+#startBtn {
+  position:fixed; top:50%; left:50%;
+  transform:translate(-50%, -50%);
+  padding:20px 50px;
+  font-size:26px;
+  border:none;
+  border-radius:15px;
+  background: rgba(200,200,200,0.2);
+  color:#fff;
   cursor:pointer;
-  background: rgba(200,200,200,0.1);
-  border:2px solid rgba(200,200,200,0.3);
-  border-radius:14px;
-  color:#fff;
-  font-weight:bold;
-  text-transform: uppercase;
-  letter-spacing:1px;
   transition: all 0.4s ease;
-  position:relative;
-  z-index:1;
-  animation: pulse 3s infinite;
+  box-shadow:0 4px 15px rgba(0,0,0,0.3);
 }
-#enterBtn:hover {
-  background: rgba(200,200,200,0.25);
-  border-color: rgba(200,200,200,0.6);
-  transform: scale(1.08) rotate(-1deg);
-}
-@keyframes pulse{
-  0%{box-shadow:0 0 8px rgba(255,255,255,0.2);}
-  50%{box-shadow:0 0 18px rgba(255,255,255,0.4);}
-  100%{box-shadow:0 0 8px rgba(255,255,255,0.2);}
+#startBtn:hover {
+  transform:translate(-50%, -50%) scale(1.05);
+  box-shadow:0 6px 20px rgba(0,0,0,0.5);
 }
 
-/* Контейнер */
-.container{
-  width:75%; max-width:600px;
-  padding:18px;
+/* Секции */
+.section {
+  width:90%; max-width:800px;
+  margin:40px auto;
+  padding:20px;
   border-radius:16px;
   background: rgba(0,0,0,0.35);
   backdrop-filter: blur(10px);
-  box-shadow: 0 0 25px rgba(255,255,255,0.08);
-  text-align:left; font-size:18px; line-height:1.5;
-  white-space: pre-wrap; overflow-wrap: break-word;
-  transform-style: preserve-3d;
-  transition: transform 0.1s ease, opacity 0.6s ease;
-  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  display:none; opacity:0;
-  animation: flicker 2s infinite alternate;
-  z-index:1;
+  box-shadow:0 0 25px rgba(255,255,255,0.08);
+  text-align:center;
+  line-height:1.6;
+  position:relative;
+  opacity:0;
+  transform:translateY(40px);
+  transition: all 0.8s ease;
 }
-.container.show{ display:block; opacity:1; }
+.section.visible { opacity:1; transform:translateY(0); }
 
-@keyframes flicker{
-  0%{opacity:0.88;}
-  50%{opacity:0.95;}
-  100%{opacity:0.9;}
-}
-
-.avatar{
-  width:100px; height:100px; border-radius:50%;
+/* Аватар */
+.avatar {
+  width:120px; height:120px;
+  border-radius:50%;
   background: url('OsmiumStudio_avatar_gradient.png') center/cover no-repeat;
-  margin:0 auto 18px auto; display:block;
+  margin:0 auto 15px;
+  display:block;
   box-shadow:0 0 15px rgba(255,255,255,0.15);
 }
 
-.cursor{ display:inline-block; width:10px; background-color:white; animation: blink 1s infinite; vertical-align:bottom; margin-left:2px;}
-@keyframes blink{0%,50%,100%{opacity:1;}25%,75%{opacity:0;}}
-
+/* Кнопки */
 .link-btn {
   display: inline-block;
   margin:8px 10px 0 0;
@@ -98,170 +75,202 @@ body, html {
   border:2px solid rgba(200,200,200,0.3);
   box-shadow:0 3px 10px rgba(0,0,0,0.2);
   transition: all 0.4s ease;
-  perspective: 1000px;
 }
-.link-btn:hover{
+.link-btn:hover {
   transform: translateY(-2px) rotateX(1deg);
   box-shadow:0 6px 15px rgba(0,0,0,0.3);
 }
-.link-btn:active{
-  transform: translateY(1px) rotateX(0deg);
-  box-shadow:0 3px 8px rgba(0,0,0,0.25);
+
+/* Печатающийся курсор */
+.cursor {
+  display:inline-block;
+  width:10px;
+  background-color:white;
+  animation: blink 1s infinite;
+  vertical-align:bottom;
+  margin-left:2px;
 }
+@keyframes blink{0%,50%,100%{opacity:1;}25%,75%{opacity:0;}}
 
-#time, #domain { position:absolute; left:50%; transform:translateX(-50%); letter-spacing:1px; z-index:1; }
-#time{ top:20px; font-size:24px; }
-#domain{ top:60px; font-size:22px; }
-
-.floating-text{
-  position:absolute; font-size:14px; opacity:0.7; white-space:nowrap; 
-  background: rgba(0,0,0,0.25); padding:2px 5px; border-radius:5px; z-index:1; 
+/* Время и домен */
+#time, #domain {
+  position:fixed; left:50%; transform:translateX(-50%);
+  letter-spacing:1px; z-index:2;
 }
+#time { top:20px; font-size:24px; }
+#domain { top:60px; font-size:22px; }
 
+/* Мобильная адаптация */
 @media(max-width:600px){
-  #time{font-size:18px;} #domain{font-size:16px;}
-  .container{font-size:16px; padding:15px;}
-  .avatar{width:80px;height:80px;}
-  .floating-text{font-size:12px;}
-  .link-btn{font-size:14px; padding:4px 8px;}
+  #time{font-size:20px;}
+  #domain{font-size:18px;}
+  .section{font-size:16px; padding:15px;}
+  .avatar{width:100px; height:100px;}
 }
 </style>
 </head>
 <body>
 
-<canvas id="particles"></canvas>
-<button id="enterBtn">Click to Enter</button>
+<!-- Кнопка запуска -->
+<button id="startBtn">Click to Start</button>
 
+<!-- Аудио -->
+<audio id="music" src="dabbackwood — ghostbless.mp3" loop></audio>
+
+<!-- Время и домен -->
 <div id="time"></div>
 <div id="domain"></div>
 
-<div class="container" id="container">
+<!-- Верхний контейнер с аватаркой и текстом -->
+<div class="section" id="container">
   <div class="avatar"></div>
   <div id="text"></div>
-  <div id="links">
-    <a href="https://www.tiktok.com/@yoshhhua" target="_blank" class="link-btn">TikTok</a>
-    <a href="https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH" target="_blank" class="link-btn">Roblox Game</a>
-    <a href="https://www.roblox.com/communities/823010003/Osmium-Studio#!/about" target="_blank" class="link-btn">Group</a>
+  <div style="margin-top:15px;">
+    <a class="link-btn" href="https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH" target="_blank">Roblox Game</a>
+    <a class="link-btn" href="https://www.roblox.com/communities/823010003/Osmium-Studio#!/about" target="_blank">Group</a>
+    <a class="link-btn" href="https://www.tiktok.com/@yoshhhua" target="_blank">TikTok</a>
   </div>
 </div>
 
-<audio id="music" src="dabbackwood — ghostbless.mp3 (www.lightaudio.ru).mp3" loop></audio>
+<!-- Нижняя информация -->
+<div class="section" id="infoSection">
+  <h2>About Me</h2>
+  <p>City: Ufa</p>
+  <p>Country: Russia</p>
+  <p>Gaming Nick: YoshuaNew</p>
+  <img src="OsmiumStudio_avatar_gradient.png" alt="Avatar" style="width:150px; border-radius:50%; margin-top:15px;">
+</div>
 
 <script>
-// ---------------------- Canvas particles ----------------------
-const canvas=document.getElementById('particles');
-const ctx=canvas.getContext('2d');
-canvas.width=window.innerWidth; canvas.height=window.innerHeight;
-const particles=[];
-for(let i=0;i<100;i++){
-  particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,size:Math.random()*2+1,alpha:Math.random()*0.5+0.1});
-}
-function drawParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  for(let p of particles){
-    ctx.fillStyle=`rgba(255,255,255,${p.alpha})`;
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
-    ctx.fill();
-  }
-  requestAnimationFrame(drawParticles);
-}
-drawParticles();
-window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+// ------------------------
+// Кнопка запуска
+// ------------------------
+const startBtn = document.getElementById('startBtn');
+const music = document.getElementById('music');
+const container = document.getElementById('container');
+const infoSection = document.getElementById('infoSection');
 
-// ---------------- Typing effect ----------------
-function typeErase(elem,text,speed=50,callback=()=>{}){
-  let pos=0;
-  function typeChar(){
-    if(pos<text.length){
-      if(Math.random()<0.08 && pos>0){
-        elem.textContent+=String.fromCharCode(33+Math.floor(Math.random()*94));
-        setTimeout(()=>{elem.textContent=elem.textContent.slice(0,-1); setTimeout(typeChar,speed);},speed*2);
-      } else {elem.textContent+=text.charAt(pos); pos++; setTimeout(typeChar,speed);}
-    } else setTimeout(eraseChar,800);
-  }
-  function eraseChar(){
-    if(elem.textContent.length>0){ elem.textContent=elem.textContent.slice(0,-1); setTimeout(eraseChar,speed/1.5);}
-    else callback();
-  }
-  typeChar();
-}
+startBtn.addEventListener('click', ()=>{
+  music.play();
+  container.classList.add('visible');
+  infoSection.classList.add('visible');
+  startBtn.style.display='none';
+});
 
-// ---------------- Domain ----------------
-const domainElem=document.getElementById('domain');
-const domains=["YoshuaNew","YO_SHUAnew","YOSHUAnew","Yoshuaaa"];
-let domainIndex=0;
-function nextDomain(){ typeErase(domainElem,domains[domainIndex],120,()=>{domainIndex=(domainIndex+1)%domains.length; nextDomain();});}
-
-// ---------------- Time ----------------
-const timeElem=document.getElementById('time');
-function updateTimeLoop(){
-  const now=new Date();
-  let h=String(now.getHours()).padStart(2,"0"), m=String(now.getMinutes()).padStart(2,"0"), s=String(now.getSeconds()).padStart(2,"0");
-  typeErase(timeElem,`${h}:${m}:${s}`,50,updateTimeLoop);
-}
-
-// ---------------- Central Text ----------------
-const textElem=document.getElementById('text');
-const centralText=`Discord: @yoshuanew
+// ------------------------
+// Печатающийся текст с курсором
+// ------------------------
+const textContent = `Discord: @yoshuanew
 Telegram: @YoshuaNew
 TikTok: https://www.tiktok.com/@yoshhhua
-Roblox Game: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
-Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about`;
-function typeCentral(){ typeErase(textElem,centralText,30,()=>{ setTimeout(typeCentral,2000);});}
+Roblox Game 1: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
+Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
+Fun Fact: I love coding at night.
+Extra Info: Coffee is my fuel.
+Trivia: Cats are secretly plotting.
+Misc: Music is life.
+`;
+const textContainer = document.getElementById('text');
+let i=0;
+const cursor = document.createElement('span');
+cursor.className='cursor';
+cursor.innerHTML=' ';
+textContainer.appendChild(cursor);
 
-// ---------------- Container movement ----------------
-const container=document.getElementById('container');
-let mouseX=0, mouseY=0;
-document.addEventListener('mousemove',e=>{
-  mouseX=e.clientX-window.innerWidth/2;
-  mouseY=e.clientY-window.innerHeight/2;
-});
-function animateContainer(){
-  const rotateX=(-mouseY/80).toFixed(2);
-  const rotateY=(mouseX/80).toFixed(2);
-  container.style.transform=`translate(-50%,-50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-  requestAnimationFrame(animateContainer);
-}
-animateContainer();
-
-// ---------------- Floating Info ----------------
-const floatingInfo=[
-"Fun Fact: I love coding at night.",
-"Random Info: Favorite number 42.",
-"Extra: Coffee is my fuel.",
-"Note: I sometimes forget to sleep.",
-"Trivia: Cats are secretly plotting.",
-"Misc: Music is life.",
-"Fact: Coded a website in 3h.",
-"Tidbit: Enjoy minimalistic design.",
-"Info: Always learning new things."
-];
-function spawnFloatingText(){
-  if(Math.random()<0.08){
-    const info=floatingInfo[Math.floor(Math.random()*floatingInfo.length)];
-    const span=document.createElement('span'); span.className='floating-text';
-    const side=Math.floor(Math.random()*4);
-    switch(side){
-      case 0: span.style.top="10px"; span.style.left=Math.random()*(window.innerWidth-150)+"px"; break;
-      case 1: span.style.bottom="10px"; span.style.left=Math.random()*(window.innerWidth-150)+"px"; break;
-      case 2: span.style.left="10px"; span.style.top=Math.random()*(window.innerHeight-30)+"px"; break;
-      case 3: span.style.right="10px"; span.style.top=Math.random()*(window.innerHeight-30)+"px"; break;
-    }
-    document.body.appendChild(span);
-    typeErase(span,info,40,()=>{ span.remove(); });
+function typeWriter(){
+  if(i<textContent.length){
+    textContainer.insertBefore(document.createTextNode(textContent.charAt(i)), cursor);
+    i++;
+    setTimeout(typeWriter,25);
+    textContainer.scrollTop=textContainer.scrollHeight;
   }
 }
-setInterval(spawnFloatingText,14000);
+typeWriter();
 
-// ---------------- Enter Button ----------------
-document.getElementById('enterBtn').addEventListener('click',()=>{
-  document.getElementById('enterBtn').style.display='none';
-  container.classList.add('show');
-  document.getElementById('music').play().catch(()=>{});
-  nextDomain();
-  updateTimeLoop();
-  typeCentral();
+// ------------------------
+// Домен с эффектом печати
+// ------------------------
+const domainElem = document.getElementById('domain');
+const domains = ["YoshuaNew","YO_SHUAnew","YOSHUAnew","Yoshuaaa"];
+let domainIndex=0;
+
+function typeDomain(text,callback){
+  let pos=0;
+  function addChar(){
+    if(pos<=text.length){
+      domainElem.textContent=text.substring(0,pos)+"_";
+      pos++;
+      setTimeout(addChar,120);
+    } else { setTimeout(()=>eraseDomain(text,callback),800); }
+  }
+  addChar();
+}
+function eraseDomain(text,callback){
+  let pos=text.length;
+  function removeChar(){
+    if(pos>=0){
+      domainElem.textContent=text.substring(0,pos)+"_";
+      pos--;
+      setTimeout(removeChar,80);
+    } else { callback(); }
+  }
+  removeChar();
+}
+function nextDomain(){
+  typeDomain(domains[domainIndex], ()=>{
+    domainIndex=(domainIndex+1)%domains.length;
+    nextDomain();
+  });
+}
+nextDomain();
+
+// ------------------------
+// Время с печатанием
+// ------------------------
+const timeElem = document.getElementById('time');
+function typeTime(text,callback){
+  let pos=0;
+  function addChar(){
+    if(pos<=text.length){
+      timeElem.textContent=text.substring(0,pos);
+      pos++;
+      setTimeout(addChar,80);
+    } else { setTimeout(()=>eraseTime(text,callback),400); }
+  }
+  addChar();
+}
+function eraseTime(text,callback){
+  let pos=text.length;
+  function removeChar(){
+    if(pos>=0){
+      timeElem.textContent=text.substring(0,pos);
+      pos--;
+      setTimeout(removeChar,50);
+    } else { callback(); }
+  }
+  removeChar();
+}
+function updateTimeLoop(){
+  const now = new Date();
+  let h=String(now.getHours()).padStart(2,"0");
+  let m=String(now.getMinutes()).padStart(2,"0");
+  let s=String(now.getSeconds()).padStart(2,"0");
+  const currentTime = `${h}:${m}:${s}`;
+  typeTime(currentTime,updateTimeLoop);
+}
+updateTimeLoop();
+
+// ------------------------
+// Вращение контейнера за мышкой
+// ------------------------
+document.addEventListener('mousemove', e=>{
+  const centerX=window.innerWidth/2;
+  const centerY=window.innerHeight/2;
+  const deltaX=e.clientX-centerX;
+  const deltaY=e.clientY-centerY;
+  const rotateX=(-deltaY/25).toFixed(2);
+  const rotateY=(deltaX/25).toFixed(2);
+  container.style.transform=`rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 });
 </script>
 </body>
