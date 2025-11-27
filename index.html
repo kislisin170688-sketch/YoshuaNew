@@ -15,62 +15,71 @@ body, html {
   background: linear-gradient(120deg, #0f0f0f, #1a1a1a, #0f0f0f);
   background-size: 600% 600%;
   animation: gradientMove 25s ease infinite;
+  display: flex; justify-content: center; align-items: center;
 }
-@keyframes gradientMove {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
-
-#time { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; letter-spacing: 1px; }
-#domain { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 22px; letter-spacing: 1px; }
-
-.container {
+@keyframes gradientMove {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+#enterBtn {
+  padding: 15px 30px;
+  font-size: 20px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 12px;
+  color: #fff;
+  transition: all 0.2s;
+}
+#enterBtn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6);}
+#time, #domain { position: absolute; left: 50%; transform: translateX(-50%); letter-spacing: 1px;}
+#time{ top:20px; font-size:24px;}
+#domain{ top:60px; font-size:22px;}
+.container{
   width: 90%; max-width: 700px;
-  padding: 20px 25px;
+  padding: 25px;
   border-radius: 20px;
   background: rgba(0,0,0,0.5);
   backdrop-filter: blur(10px);
   box-shadow: 0 0 30px rgba(255,255,255,0.1);
-  text-align: left;
-  font-size: 18px; line-height: 1.6;
+  text-align: left; font-size:18px; line-height:1.6;
   white-space: pre-wrap; overflow-wrap: break-word;
   transform-style: preserve-3d;
   transition: transform 0.05s ease-out;
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  position: absolute; top:50%; left:50%; transform: translate(-50%,-50%);
+  display:none;
 }
-
-.avatar { width: 120px; height: 120px; border-radius: 50%; background: url('OsmiumStudio_avatar_gradient.png') center/cover no-repeat; margin:0 auto 20px auto; display:block; box-shadow:0 0 20px rgba(255,255,255,0.2); }
-
-.cursor { display:inline-block; width:10px; background-color:white; animation: blink 1s infinite; vertical-align:bottom; margin-left:2px; }
-
-.floating-text { position:absolute; font-size:14px; opacity:0.7; white-space:nowrap; background: rgba(0,0,0,0.2); padding:2px 5px; border-radius:5px; }
-
-.link-btn { display:inline-block; margin:5px 10px 0 0; padding:6px 12px; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.3); border-radius:8px; cursor:pointer; font-size:16px; text-decoration:none; transition: all 0.2s; }
+.avatar{
+  width:120px; height:120px; border-radius:50%;
+  background: url('OsmiumStudio_avatar_gradient.png') center/cover no-repeat;
+  margin:0 auto 20px auto; display:block;
+  box-shadow:0 0 20px rgba(255,255,255,0.2);
+}
+.cursor{ display:inline-block; width:10px; background-color:white; animation: blink 1s infinite; vertical-align:bottom; margin-left:2px;}
+@keyframes blink{0%,50%,100%{opacity:1;}25%,75%{opacity:0;}}
+.link-btn { display:inline-block; margin:5px 10px 0 0; padding:6px 12px; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.3); border-radius:8px; cursor:pointer; text-decoration:none; transition: all 0.2s; }
 .link-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6); }
-
-@keyframes blink {0%,50%,100%{opacity:1;}25%,75%{opacity:0;}}
-
+.floating-text{ position:absolute; font-size:14px; opacity:0.7; white-space:nowrap; background: rgba(0,0,0,0.2); padding:2px 5px; border-radius:5px; }
 @media(max-width:600px){
-  #time { font-size: 18px; }
-  #domain { font-size: 16px; }
-  .container { font-size: 16px; padding: 15px 20px; }
-  .avatar { width: 100px; height: 100px; }
-  .floating-text { font-size: 12px; }
-  .link-btn { font-size: 14px; padding: 4px 8px; }
+  #time{font-size:18px;} #domain{font-size:16px;}
+  .container{font-size:16px; padding:15px 20px;}
+  .avatar{width:100px;height:100px;}
+  .floating-text{font-size:12px;}
+  .link-btn{font-size:14px; padding:4px 8px;}
 }
 </style>
 </head>
 <body>
+
+<button id="enterBtn">Click to Enter</button>
 
 <div id="time"></div>
 <div id="domain"></div>
 
 <div class="container" id="container">
   <div class="avatar"></div>
-  <div id="text">
-Discord: @yoshuanew
-Telegram: @YoshuaNew
-TikTok: https://www.tiktok.com/@yoshhhua
-Roblox Game: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
-Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
-  </div>
+  <div id="text"></div>
   <div id="links">
     <a href="https://www.tiktok.com/@yoshhhua" target="_blank" class="link-btn">TikTok</a>
     <a href="https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH" target="_blank" class="link-btn">Roblox Game</a>
@@ -78,53 +87,51 @@ Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
   </div>
 </div>
 
-<audio id="music" src="dabbackwood — сейджуро акаши 2) (www.lightaudio.ru) (1).mp3" autoplay loop></audio>
+<audio id="music" src="dabbackwood — сейджуро акаши 2) (www.lightaudio.ru) (1).mp3" loop></audio>
 
 <script>
-// ---------------- Типинг с ошибками и стиранием ----------------
-function typeErase(elem, text, speed=50, callback=()=>{}){
+// ---------------- Типинг с ошибками ----------------
+function typeErase(elem,text,speed=50,callback=()=>{}){
   let pos=0;
   function typeChar(){
-    if(pos < text.length){
+    if(pos<text.length){
       if(Math.random()<0.1 && pos>0){
-        elem.textContent += String.fromCharCode(33+Math.floor(Math.random()*94));
-        setTimeout(()=>{ elem.textContent = elem.textContent.slice(0,-1); setTimeout(typeChar,speed);}, speed*2);
-      } else {
-        elem.textContent += text.charAt(pos); pos++;
-        setTimeout(typeChar,speed);
-      }
-    } else setTimeout(eraseChar, 800);
+        elem.textContent+=String.fromCharCode(33+Math.floor(Math.random()*94));
+        setTimeout(()=>{elem.textContent=elem.textContent.slice(0,-1); setTimeout(typeChar,speed);},speed*2);
+      } else {elem.textContent+=text.charAt(pos); pos++; setTimeout(typeChar,speed);}
+    } else setTimeout(eraseChar,800);
   }
   function eraseChar(){
-    if(elem.textContent.length>0){
-      elem.textContent = elem.textContent.slice(0,-1);
-      setTimeout(eraseChar,speed/1.5);
-    } else callback();
+    if(elem.textContent.length>0){ elem.textContent=elem.textContent.slice(0,-1); setTimeout(eraseChar,speed/1.5);}
+    else callback();
   }
   typeChar();
 }
 
-// Домен
+// ---------------- Domain ----------------
 const domainElem = document.getElementById('domain');
 const domains = ["YoshuaNew","YO_SHUAnew","YOSHUAnew","Yoshuaaa"];
 let domainIndex=0;
-function nextDomain(){ typeErase(domainElem, domains[domainIndex], 120, ()=>{
-  domainIndex=(domainIndex+1)%domains.length; nextDomain();
-});}
-nextDomain();
+function nextDomain(){ typeErase(domainElem,domains[domainIndex],120,()=>{domainIndex=(domainIndex+1)%domains.length; nextDomain();});}
 
-// Время
+// ---------------- Time ----------------
 const timeElem = document.getElementById('time');
 function updateTimeLoop(){
   const now = new Date();
-  let h=String(now.getHours()).padStart(2,"0");
-  let m=String(now.getMinutes()).padStart(2,"0");
-  let s=String(now.getSeconds()).padStart(2,"0");
-  typeErase(timeElem, `${h}:${m}:${s}`, 50, updateTimeLoop);
+  let h=String(now.getHours()).padStart(2,"0"), m=String(now.getMinutes()).padStart(2,"0"), s=String(now.getSeconds()).padStart(2,"0");
+  typeErase(timeElem,`${h}:${m}:${s}`,50,updateTimeLoop);
 }
-updateTimeLoop();
 
-// Вращение контейнера
+// ---------------- Central Text ----------------
+const textElem=document.getElementById('text');
+const centralText=`Discord: @yoshuanew
+Telegram: @YoshuaNew
+TikTok: https://www.tiktok.com/@yoshhhua
+Roblox Game: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
+Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about`;
+function typeCentral(){ typeErase(textElem,centralText,30,()=>{ setTimeout(typeCentral,2000);});}
+
+// ---------------- Container Movement ----------------
 const container = document.getElementById('container');
 document.addEventListener('mousemove',e=>{
   const centerX=window.innerWidth/2, centerY=window.innerHeight/2;
@@ -133,21 +140,21 @@ document.addEventListener('mousemove',e=>{
   container.style.transform=`translate(-50%,-50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 });
 
-// Плавающий текст по краям (редко)
+// ---------------- Floating Info ----------------
 const floatingInfo=[
-  "Fun Fact: I love coding at night.",
-  "Random Info: Favorite number 42.",
-  "Extra: Coffee is my fuel.",
-  "Note: I sometimes forget to sleep.",
-  "Trivia: Cats are secretly plotting.",
-  "Misc: Music is life.",
-  "Fact: Coded a website in 3h.",
-  "Tidbit: Enjoy minimalistic design.",
-  "Info: Always learning new things."
+"Fun Fact: I love coding at night.",
+"Random Info: Favorite number 42.",
+"Extra: Coffee is my fuel.",
+"Note: I sometimes forget to sleep.",
+"Trivia: Cats are secretly plotting.",
+"Misc: Music is life.",
+"Fact: Coded a website in 3h.",
+"Tidbit: Enjoy minimalistic design.",
+"Info: Always learning new things."
 ];
 function spawnFloatingText(){
   if(Math.random()<0.15){
-    const info = floatingInfo[Math.floor(Math.random()*floatingInfo.length)];
+    const info=floatingInfo[Math.floor(Math.random()*floatingInfo.length)];
     const span=document.createElement('span'); span.className='floating-text';
     const side=Math.floor(Math.random()*4);
     switch(side){
@@ -157,10 +164,20 @@ function spawnFloatingText(){
       case 3: span.style.right="10px"; span.style.top=Math.random()*(window.innerHeight-30)+"px"; break;
     }
     document.body.appendChild(span);
-    typeErase(span, info, 40, ()=>{ span.remove(); });
+    typeErase(span,info,40,()=>{ span.remove(); });
   }
 }
 setInterval(spawnFloatingText,10000);
+
+// ---------------- Enter Button ----------------
+document.getElementById('enterBtn').addEventListener('click',()=>{
+  document.getElementById('enterBtn').style.display='none';
+  container.style.display='block';
+  document.getElementById('music').play().catch(()=>{});
+  nextDomain();
+  updateTimeLoop();
+  typeCentral();
+});
 </script>
 </body>
 </html>
