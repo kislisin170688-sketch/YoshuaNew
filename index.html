@@ -4,77 +4,38 @@
 <meta charset="UTF-8">
 <title>My Contacts and Projects</title>
 <style>
-  /* Full-screen flex container */
-  html, body {
+  /* Body and background */
+  body, html {
     margin: 0;
     padding: 0;
     height: 100%;
-    width: 100%;
-    background: linear-gradient(270deg, #ff6ec4, #7873f5, #1fd1f9, #ff6ec4);
-    background-size: 800% 800%;
-    animation: gradientBG 15s ease infinite;
+    background: #000;
     font-family: monospace;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  @keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  /* Scrollable container for content */
-  .container {
-    max-width: 800px;
-    max-height: 90vh; /* Leave some space at top/bottom */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    color: #fff;
     overflow-y: auto;
-    padding: 20px;
-    background: rgba(0,0,0,0.3);
-    border-radius: 20px;
-    box-shadow: 0 0 40px rgba(255,255,255,0.2);
+    perspective: 1px; /* for parallax */
   }
 
-  /* Avatar */
-  .avatar {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: url('avatar.png') center/cover no-repeat;
-    margin-bottom: 30px;
-    box-shadow: 0 0 20px rgba(255,255,255,0.8);
-    animation: pulse 2s infinite;
+  /* Parallax section */
+  .parallax {
+    position: relative;
+    transform-style: preserve-3d;
   }
 
-  @keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.8); }
-    50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255,255,255,1); }
-    100% { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.8); }
-  }
-
-  /* Text */
-  .text {
-    font-size: 20px;
+  /* Glass effect container */
+  .container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 25px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 30px rgba(255,255,255,0.1);
+    text-align: left;
+    font-size: 18px;
     line-height: 1.5;
-    white-space: pre-line;
-    background: linear-gradient(90deg, #ff6ec4, #7873f5, #1fd1f9, #ff6ec4);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    animation: gradientText 5s ease infinite;
-  }
-
-  @keyframes gradientText {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
   }
 
   /* Cursor */
@@ -88,71 +49,64 @@
   }
 
   @keyframes blink {
-    0%, 50%, 100% { opacity: 1; }
-    25%, 75% { opacity: 0; }
+    0%,50%,100%{opacity:1;}
+    25%,75%{opacity:0;}
   }
+
+  /* Avatar */
+  .avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: url('avatar.png') center/cover no-repeat;
+    margin: 0 auto 20px auto;
+    display: block;
+  }
+
 </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="avatar"></div>
-  <div class="text" id="text"></div>
+<div class="parallax">
+  <div class="container" id="textContainer">
+    <div class="avatar"></div>
+  </div>
 </div>
 
-<audio id="music" src="music.mp3" autoplay loop></audio>
+<audio src="music.mp3" autoplay loop></audio>
 
 <script>
-const lines = [
-  "Discord: @yoshuanew",
-  "Telegram: @YoshuaNew",
-  "TikTok: https://www.tiktok.com/@yoshhhua",
-  "Roblox Game 1: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH",
-  "Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about",
-  "My interests: Games, design, programming",
-  "Contact for collaboration: business@yoshua.com"
-];
+const text = `Discord: @yoshuanew
+Telegram: @YoshuaNew
+TikTok: https://www.tiktok.com/@yoshhhua
+Roblox Game 1: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
+Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
+My interests: Games, design, programming
+Contact for collaboration: business@yoshua.com
+... (добавь здесь 200 уникальных строк текста, всё подряд, без массива) ...
+`;
 
-// Add extra unique lines up to 200
-for (let i = lines.length; i < 200; i++) {
-  lines.push(`Unique line ${i + 1}: This is additional project info or notes.`);
-}
+const container = document.getElementById('textContainer');
+let i = 0;
+const speed = 10; // скорость печати
 
-let lineIndex = 0;
-let charIndex = 0;
-const speed = 15; // Faster typing
+// Добавляем курсор
+const cursor = document.createElement('span');
+cursor.className = 'cursor';
+cursor.innerHTML = ' ';
+container.appendChild(cursor);
 
 function typeWriter() {
-  const textElement = document.getElementById("text");
-  if (lineIndex < lines.length) {
-    if (charIndex < lines[lineIndex].length) {
-      textElement.innerHTML += lines[lineIndex].charAt(charIndex);
-      charIndex++;
-      setTimeout(typeWriter, speed);
-    } else {
-      textElement.innerHTML += "\n";
-      charIndex = 0;
-      lineIndex++;
-      setTimeout(typeWriter, speed);
-    }
+  if(i < text.length){
+    container.insertBefore(document.createTextNode(text.charAt(i)), cursor);
+    i++;
+    setTimeout(typeWriter, speed);
+    // прокрутка вниз
+    container.scrollTop = container.scrollHeight;
   }
 }
 
-// Blinking cursor
-const cursor = document.createElement("span");
-cursor.className = "cursor";
-cursor.innerHTML = " ";
-document.getElementById("text").appendChild(cursor);
-
-// Start typing
 typeWriter();
-
-// Auto-scroll
-const textContainer = document.getElementById("text");
-const observer = new MutationObserver(() => {
-  textContainer.scrollTop = textContainer.scrollHeight;
-});
-observer.observe(textContainer, { childList: true, subtree: true });
 </script>
 
 </body>
