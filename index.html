@@ -10,7 +10,7 @@
     padding: 0;
     height: 100%;
     width: 100%;
-    background: #000;
+    background: #000; /* фон можно заменить на прозрачный, если нужен через rgba(0,0,0,0) */
     font-family: monospace;
     color: #fff;
     overflow: hidden;
@@ -25,7 +25,7 @@
     max-width: 700px;
     padding: 20px 25px;
     border-radius: 20px;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.5); /* полупрозрачный контейнер */
     backdrop-filter: blur(10px);
     box-shadow: 0 0 30px rgba(255,255,255,0.1);
     text-align: left;
@@ -65,6 +65,9 @@
     font-size: 14px;
     opacity: 0.7;
     white-space: nowrap;
+    background: rgba(0,0,0,0.2); /* чуть прозрачный фон у текста для видимости */
+    padding: 2px 5px;
+    border-radius: 5px;
   }
 
   @keyframes blink { 0%,50%,100%{opacity:1;} 25%,75%{opacity:0;} }
@@ -212,44 +215,49 @@ document.addEventListener('mousemove', e => {
 });
 
 // ------------------------
-// Плавающая "неважная" информация
+// Плавающая информация по краям
 // ------------------------
 const floatingInfo = [
   "Fun Fact: I love coding at night.",
-  "Random Info: My favorite number is 42.",
+  "Random Info: Favorite number 42.",
   "Extra: Coffee is my fuel.",
   "Note: I sometimes forget to sleep.",
   "Trivia: Cats are secretly plotting.",
   "Misc: Music is life.",
-  "Fact: I once coded a website in 3 hours.",
-  "Tidbit: I enjoy minimalistic design.",
-  "Info: Always learning new things.",
-  "Debug: Testing floating text.",
-  "Random: Space is infinite."
+  "Fact: Coded a website in 3h.",
+  "Tidbit: Enjoy minimalistic design.",
+  "Info: Always learning new things."
 ];
 
-function spawnFloatingText(){
-  floatingInfo.forEach(text => {
-    const span = document.createElement('span');
-    span.className = 'floating-text';
-    span.style.left = Math.random()*window.innerWidth + "px";
-    span.style.top = Math.random()*window.innerHeight + "px";
-    document.body.appendChild(span);
-    typeFloatingText(span, text, 0);
-  });
+function spawnFloatingText() {
+  const info = floatingInfo[Math.floor(Math.random()*floatingInfo.length)];
+  const span = document.createElement('span');
+  span.className = 'floating-text';
+
+  // случайный край: top, bottom, left, right
+  const side = Math.floor(Math.random()*4);
+  switch(side){
+    case 0: span.style.top = "10px"; span.style.left = Math.random()*(window.innerWidth-100)+"px"; break;
+    case 1: span.style.bottom = "10px"; span.style.left = Math.random()*(window.innerWidth-100)+"px"; break;
+    case 2: span.style.left = "10px"; span.style.top = Math.random()*(window.innerHeight-30)+"px"; break;
+    case 3: span.style.right = "10px"; span.style.top = Math.random()*(window.innerHeight-30)+"px"; break;
+  }
+
+  document.body.appendChild(span);
+  typeFloatingText(span, info, 0);
 }
 
 function typeFloatingText(span, text, idx){
   if(idx <= text.length){
     span.textContent = text.substring(0, idx) + "_";
-    setTimeout(() => typeFloatingText(span, text, idx+1), 50 + Math.random()*50);
+    setTimeout(()=>typeFloatingText(span, text, idx+1), 50 + Math.random()*50);
   } else {
-    setTimeout(() => span.remove(), 5000 + Math.random()*5000); // исчезает через случайное время
+    setTimeout(()=>span.remove(), 5000 + Math.random()*3000);
   }
 }
 
-// Спавним плавающий текст каждые 1.5 секунды
-setInterval(spawnFloatingText, 1500);
+// спавн каждые 2 секунды
+setInterval(spawnFloatingText, 2000);
 
 </script>
 </body>
