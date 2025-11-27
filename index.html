@@ -5,75 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YoshuaNew</title>
 <style>
-  body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    font-family: monospace;
-    color: #fff;
-    overflow: hidden;
-    perspective: 1000px;
-    background: linear-gradient(120deg, #0f0f0f, #1a1a1a, #0f0f0f);
-    background-size: 600% 600%;
-    animation: gradientMove 25s ease infinite;
-  }
+body, html {
+  margin: 0; padding: 0;
+  height: 100%; width: 100%;
+  font-family: monospace;
+  color: #fff;
+  overflow: hidden;
+  perspective: 1000px;
+  background: linear-gradient(120deg, #0f0f0f, #1a1a1a, #0f0f0f);
+  background-size: 600% 600%;
+  animation: gradientMove 25s ease infinite;
+}
+@keyframes gradientMove {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 
-  @keyframes gradientMove {
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-  }
+#time { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; letter-spacing: 1px; }
+#domain { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 22px; letter-spacing: 1px; }
 
-  #time { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; letter-spacing: 1px; }
-  #domain { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 22px; letter-spacing: 1px; }
+.container {
+  width: 90%; max-width: 700px;
+  padding: 20px 25px;
+  border-radius: 20px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 30px rgba(255,255,255,0.1);
+  text-align: left;
+  font-size: 18px; line-height: 1.6;
+  white-space: pre-wrap; overflow-wrap: break-word;
+  transform-style: preserve-3d;
+  transition: transform 0.05s ease-out;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+}
 
-  .container {
-    width: 90%;
-    max-width: 700px;
-    padding: 20px 25px;
-    border-radius: 20px;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 30px rgba(255,255,255,0.1);
-    text-align: left;
-    font-size: 18px;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    transform-style: preserve-3d;
-    transition: transform 0.05s ease-out;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+.avatar { width: 120px; height: 120px; border-radius: 50%; background: url('OsmiumStudio_avatar_gradient.png') center/cover no-repeat; margin:0 auto 20px auto; display:block; box-shadow:0 0 20px rgba(255,255,255,0.2); }
 
-  .avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: url('OsmiumStudio_avatar_gradient.png') center/cover no-repeat;
-    margin: 0 auto 20px auto;
-    display: block;
-    box-shadow: 0 0 20px rgba(255,255,255,0.2);
-  }
+.cursor { display:inline-block; width:10px; background-color:white; animation: blink 1s infinite; vertical-align:bottom; margin-left:2px; }
 
-  .cursor { display: inline-block; width: 10px; background-color: white; animation: blink 1s infinite; vertical-align: bottom; margin-left: 2px; }
-  .floating-text { position: absolute; font-size: 14px; opacity: 0.7; white-space: nowrap; background: rgba(0,0,0,0.2); padding: 2px 5px; border-radius: 5px; }
-  .link-btn { display: inline-block; margin: 5px 10px 0 0; padding: 6px 12px; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; cursor: pointer; font-size: 16px; text-decoration: none; transition: all 0.2s; }
-  .link-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6); }
+.floating-text { position:absolute; font-size:14px; opacity:0.7; white-space:nowrap; background: rgba(0,0,0,0.2); padding:2px 5px; border-radius:5px; }
 
-  @keyframes blink { 0%,50%,100%{opacity:1;} 25%,75%{opacity:0;} }
+.link-btn { display:inline-block; margin:5px 10px 0 0; padding:6px 12px; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.3); border-radius:8px; cursor:pointer; font-size:16px; text-decoration:none; transition: all 0.2s; }
+.link-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6); }
 
-  @media(max-width:600px){
-    #time { font-size: 18px; }
-    #domain { font-size: 16px; }
-    .container { font-size: 16px; padding: 15px 20px; }
-    .avatar { width: 100px; height: 100px; }
-    .floating-text { font-size: 12px; }
-    .link-btn { font-size: 14px; padding: 4px 8px; }
-  }
+@keyframes blink {0%,50%,100%{opacity:1;}25%,75%{opacity:0;}}
+
+@media(max-width:600px){
+  #time { font-size: 18px; }
+  #domain { font-size: 16px; }
+  .container { font-size: 16px; padding: 15px 20px; }
+  .avatar { width: 100px; height: 100px; }
+  .floating-text { font-size: 12px; }
+  .link-btn { font-size: 14px; padding: 4px 8px; }
+}
 </style>
 </head>
 <body>
@@ -82,7 +63,7 @@
 <div id="domain"></div>
 
 <div class="container" id="container">
-  <div class="avatar" id="avatar"></div>
+  <div class="avatar"></div>
   <div id="text">
 Discord: @yoshuanew
 Telegram: @YoshuaNew
@@ -100,21 +81,24 @@ Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
 <audio id="music" src="dabbackwood — сейджуро акаши 2) (www.lightaudio.ru) (1).mp3" autoplay loop></audio>
 
 <script>
-function typeWithMistakes(elem, text, speed=50, callback=()=>{}) {
+// ---------------- Типинг с ошибками и стиранием ----------------
+function typeErase(elem, text, speed=50, callback=()=>{}){
   let pos=0;
   function typeChar(){
     if(pos < text.length){
       if(Math.random()<0.1 && pos>0){
         elem.textContent += String.fromCharCode(33+Math.floor(Math.random()*94));
-        setTimeout(()=>{
-          elem.textContent = elem.textContent.slice(0,-1);
-          setTimeout(typeChar, speed);
-        }, speed*2);
+        setTimeout(()=>{ elem.textContent = elem.textContent.slice(0,-1); setTimeout(typeChar,speed);}, speed*2);
       } else {
-        elem.textContent += text.charAt(pos);
-        pos++;
-        setTimeout(typeChar, speed);
+        elem.textContent += text.charAt(pos); pos++;
+        setTimeout(typeChar,speed);
       }
+    } else setTimeout(eraseChar, 800);
+  }
+  function eraseChar(){
+    if(elem.textContent.length>0){
+      elem.textContent = elem.textContent.slice(0,-1);
+      setTimeout(eraseChar,speed/1.5);
     } else callback();
   }
   typeChar();
@@ -122,41 +106,35 @@ function typeWithMistakes(elem, text, speed=50, callback=()=>{}) {
 
 // Домен
 const domainElem = document.getElementById('domain');
-const domains = ["YoshuaNew", "YO_SHUAnew", "YOSHUAnew", "Yoshuaaa"];
+const domains = ["YoshuaNew","YO_SHUAnew","YOSHUAnew","Yoshuaaa"];
 let domainIndex=0;
-function nextDomain(){
-  typeWithMistakes(domainElem, domains[domainIndex], 120, ()=>{
-    domainIndex = (domainIndex+1)%domains.length;
-    nextDomain();
-  });
-}
+function nextDomain(){ typeErase(domainElem, domains[domainIndex], 120, ()=>{
+  domainIndex=(domainIndex+1)%domains.length; nextDomain();
+});}
 nextDomain();
 
 // Время
 const timeElem = document.getElementById('time');
 function updateTimeLoop(){
   const now = new Date();
-  let h = String(now.getHours()).padStart(2,"0");
-  let m = String(now.getMinutes()).padStart(2,"0");
-  let s = String(now.getSeconds()).padStart(2,"0");
-  typeWithMistakes(timeElem, `${h}:${m}:${s}`, 50, updateTimeLoop);
+  let h=String(now.getHours()).padStart(2,"0");
+  let m=String(now.getMinutes()).padStart(2,"0");
+  let s=String(now.getSeconds()).padStart(2,"0");
+  typeErase(timeElem, `${h}:${m}:${s}`, 50, updateTimeLoop);
 }
 updateTimeLoop();
 
-// Вращение контейнера за мышкой (чувствительность норм)
+// Вращение контейнера
 const container = document.getElementById('container');
-document.addEventListener('mousemove', e=>{
-  const centerX = window.innerWidth/2;
-  const centerY = window.innerHeight/2;
-  const deltaX = e.clientX - centerX;
-  const deltaY = e.clientY - centerY;
-  const rotateX = (-deltaY/60).toFixed(2);
-  const rotateY = (deltaX/60).toFixed(2);
-  container.style.transform = `translate(-50%,-50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+document.addEventListener('mousemove',e=>{
+  const centerX=window.innerWidth/2, centerY=window.innerHeight/2;
+  const deltaX=e.clientX-centerX, deltaY=e.clientY-centerY;
+  const rotateX=(-deltaY/60).toFixed(2), rotateY=(deltaX/60).toFixed(2);
+  container.style.transform=`translate(-50%,-50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 });
 
-// Плавающая информация по краям (очень редко)
-const floatingInfo = [
+// Плавающий текст по краям (редко)
+const floatingInfo=[
   "Fun Fact: I love coding at night.",
   "Random Info: Favorite number 42.",
   "Extra: Coffee is my fuel.",
@@ -167,13 +145,11 @@ const floatingInfo = [
   "Tidbit: Enjoy minimalistic design.",
   "Info: Always learning new things."
 ];
-
 function spawnFloatingText(){
-  if(Math.random()<0.15){ // 15% шанс появляться каждые интервал
+  if(Math.random()<0.15){
     const info = floatingInfo[Math.floor(Math.random()*floatingInfo.length)];
-    const span = document.createElement('span');
-    span.className = 'floating-text';
-    const side = Math.floor(Math.random()*4);
+    const span=document.createElement('span'); span.className='floating-text';
+    const side=Math.floor(Math.random()*4);
     switch(side){
       case 0: span.style.top="10px"; span.style.left=Math.random()*(window.innerWidth-150)+"px"; break;
       case 1: span.style.bottom="10px"; span.style.left=Math.random()*(window.innerWidth-150)+"px"; break;
@@ -181,11 +157,10 @@ function spawnFloatingText(){
       case 3: span.style.right="10px"; span.style.top=Math.random()*(window.innerHeight-30)+"px"; break;
     }
     document.body.appendChild(span);
-    typeWithMistakes(span, info, 40);
+    typeErase(span, info, 40, ()=>{ span.remove(); });
   }
 }
-setInterval(spawnFloatingText, 10000); // каждые 10 секунд проверяем
+setInterval(spawnFloatingText,10000);
 </script>
-
 </body>
 </html>
