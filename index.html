@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YoshuaNew</title>
 <style>
   body, html {
@@ -20,42 +21,29 @@
     flex-direction: column;
   }
 
-  /* Время сверху */
-  #time {
-    position: absolute;
-    top: 20px;
-    font-size: 28px;
-    letter-spacing: 1px;
-  }
-
-  /* Домен/название */
-  #domain {
-    position: absolute;
-    top: 60px;
-    font-size: 26px;
-    letter-spacing: 1px;
-  }
+  #time { position: absolute; top: 20px; font-size: 24px; letter-spacing: 1px; }
+  #domain { position: absolute; top: 60px; font-size: 22px; letter-spacing: 1px; }
 
   .container {
+    width: 90%;
     max-width: 700px;
-    padding: 30px;
-    border-radius: 25px;
+    padding: 20px 25px;
+    border-radius: 20px;
     background: rgba(0,0,0,0.6);
     backdrop-filter: blur(10px);
     box-shadow: 0 0 30px rgba(255,255,255,0.1);
-    text-align: center;
-    font-size: 22px;
-    line-height: 1.5;
+    text-align: left;
+    font-size: 18px;
+    line-height: 1.6;
     white-space: pre-wrap;
     overflow-wrap: break-word;
     transform-style: preserve-3d;
     transition: transform 0.05s ease-out;
-    margin-top: 120px;
   }
 
   .avatar {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     background: url('avatar.png') center/cover no-repeat;
     margin: 0 auto 20px auto;
@@ -76,6 +64,13 @@
     0%,50%,100%{opacity:1;}
     25%,75%{opacity:0;}
   }
+
+  @media(max-width:600px){
+    #time { font-size: 20px; }
+    #domain { font-size: 18px; }
+    .container { font-size: 16px; padding: 15px 20px; }
+    .avatar { width: 100px; height: 100px; }
+  }
 </style>
 </head>
 <body>
@@ -92,18 +87,27 @@
 
 <script>
 // ------------------------
-// Типинг текста контейнера
+// Медленная печать текста
 // ------------------------
 const text = `Discord: @yoshuanew
 Telegram: @YoshuaNew
 TikTok: https://www.tiktok.com/@yoshhhua
 Roblox Game 1: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
 Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
+Fun Fact: I love coding at night.
+Random Info: My favorite number is 42.
+Extra: Coffee is my fuel.
+Note: I sometimes forget to sleep.
+Trivia: Cats are secretly plotting.
+Misc: Music is life.
+Fact: I once coded a website in 3 hours.
+Tidbit: I enjoy minimalistic design.
+Info: Always learning new things.
 `;
 
 const containerText = document.getElementById('text');
 let i = 0;
-const speed = 30;
+const speed = 25;
 
 const cursor = document.createElement('span');
 cursor.className = 'cursor';
@@ -133,9 +137,9 @@ function typeDomain(text, callback){
     if(pos <= text.length){
       domainElem.textContent = text.substring(0,pos) + "_";
       pos++;
-      setTimeout(addChar, 150);
+      setTimeout(addChar, 120);
     } else {
-      setTimeout(() => eraseDomain(text, callback), 1000);
+      setTimeout(() => eraseDomain(text, callback), 800);
     }
   }
   addChar();
@@ -147,7 +151,7 @@ function eraseDomain(text, callback){
     if(pos >= 0){
       domainElem.textContent = text.substring(0,pos) + "_";
       pos--;
-      setTimeout(removeChar, 100);
+      setTimeout(removeChar, 80);
     } else {
       callback();
     }
@@ -161,11 +165,10 @@ function nextDomain(){
     nextDomain();
   });
 }
-
 nextDomain();
 
 // ------------------------
-// Время с эффектом печати и удаления
+// Время с эффектом печати
 // ------------------------
 const timeElem = document.getElementById('time');
 
@@ -175,9 +178,9 @@ function typeTime(text, callback){
     if(pos <= text.length){
       timeElem.textContent = text.substring(0,pos);
       pos++;
-      setTimeout(addChar, 100);
+      setTimeout(addChar, 80);
     } else {
-      setTimeout(() => eraseTime(text, callback), 500);
+      setTimeout(() => eraseTime(text, callback), 400);
     }
   }
   addChar();
@@ -209,7 +212,7 @@ function updateTimeLoop(){
 updateTimeLoop();
 
 // ------------------------
-// Вращение контейнера
+// Вращение контейнера за мышкой
 // ------------------------
 const container = document.getElementById('container');
 document.addEventListener('mousemove', e => {
