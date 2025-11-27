@@ -92,7 +92,7 @@
 
 <script>
 // ------------------------
-// Типинг текста
+// Типинг текста контейнера
 // ------------------------
 const text = `Discord: @yoshuanew
 Telegram: @YoshuaNew
@@ -165,20 +165,48 @@ function nextDomain(){
 nextDomain();
 
 // ------------------------
-// Время с эффектом печати
+// Время с эффектом печати и удаления
 // ------------------------
 const timeElem = document.getElementById('time');
 
-function updateTime(){
+function typeTime(text, callback){
+  let pos = 0;
+  function addChar(){
+    if(pos <= text.length){
+      timeElem.textContent = text.substring(0,pos);
+      pos++;
+      setTimeout(addChar, 100);
+    } else {
+      setTimeout(() => eraseTime(text, callback), 500);
+    }
+  }
+  addChar();
+}
+
+function eraseTime(text, callback){
+  let pos = text.length;
+  function removeChar(){
+    if(pos >= 0){
+      timeElem.textContent = text.substring(0,pos);
+      pos--;
+      setTimeout(removeChar, 50);
+    } else {
+      callback();
+    }
+  }
+  removeChar();
+}
+
+function updateTimeLoop(){
   const now = new Date();
   let h = String(now.getHours()).padStart(2,"0");
   let m = String(now.getMinutes()).padStart(2,"0");
   let s = String(now.getSeconds()).padStart(2,"0");
-  timeElem.textContent = `${h}:${m}:${s}`;
+  const currentTime = `${h}:${m}:${s}`;
+  typeTime(currentTime, updateTimeLoop);
 }
 
-setInterval(updateTime, 1000);
-updateTime();
+updateTimeLoop();
 
 // ------------------------
 // Вращение контейнера
