@@ -34,6 +34,7 @@
     white-space: pre-wrap;
     overflow-wrap: break-word;
     transform-style: preserve-3d;
+    transition: transform 0.05s ease-out;
   }
 
   /* Avatar */
@@ -45,7 +46,6 @@
     margin: 0 auto 20px auto;
     display: block;
     box-shadow: 0 0 20px rgba(255,255,255,0.2);
-    transition: transform 0.1s ease-out;
   }
 
   /* Cursor */
@@ -74,6 +74,7 @@
 <audio id="music" src="dabbackwood — сейджуро акаши 2) (www.lightaudio.ru) (1).mp3" autoplay loop></audio>
 
 <script>
+// Типинг текста
 const text = `Discord: @yoshuanew
 Telegram: @YoshuaNew
 TikTok: https://www.tiktok.com/@yoshhhua
@@ -81,8 +82,7 @@ Roblox Game 1: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
 Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
 `;
 
-// Типинг текста
-const container = document.getElementById('text');
+const containerText = document.getElementById('text');
 let i = 0;
 const speed = 30;
 
@@ -90,28 +90,32 @@ const speed = 30;
 const cursor = document.createElement('span');
 cursor.className = 'cursor';
 cursor.innerHTML = ' ';
-container.appendChild(cursor);
+containerText.appendChild(cursor);
 
 function typeWriter() {
   if(i < text.length){
-    container.insertBefore(document.createTextNode(text.charAt(i)), cursor);
+    containerText.insertBefore(document.createTextNode(text.charAt(i)), cursor);
     i++;
     setTimeout(typeWriter, speed);
-    container.scrollTop = container.scrollHeight;
+    containerText.scrollTop = containerText.scrollHeight;
   }
 }
 
 typeWriter();
 
-// Avatar следит за мышкой
-const avatar = document.getElementById('avatar');
+// Вращение всего контейнера
+const container = document.getElementById('container');
+
 document.addEventListener('mousemove', e => {
-  const rect = avatar.getBoundingClientRect();
-  const x = e.clientX - (rect.left + rect.width/2);
-  const y = e.clientY - (rect.top + rect.height/2);
-  const rotateX = (-y/20).toFixed(2);
-  const rotateY = (x/20).toFixed(2);
-  avatar.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  const deltaX = e.clientX - centerX;
+  const deltaY = e.clientY - centerY;
+
+  const rotateX = (-deltaY/25).toFixed(2); // уменьшенный коэффициент для плавности
+  const rotateY = (deltaX/25).toFixed(2);
+  
+  container.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 });
 </script>
 
