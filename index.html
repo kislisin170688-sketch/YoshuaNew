@@ -83,8 +83,18 @@
 
 <div class="container" id="container">
   <div class="avatar" id="avatar"></div>
-  <div id="text"></div>
-  <div id="links"></div>
+  <div id="text">
+Discord: @yoshuanew
+Telegram: @YoshuaNew
+TikTok: https://www.tiktok.com/@yoshhhua
+Roblox Game: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
+Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
+  </div>
+  <div id="links">
+    <a href="https://www.tiktok.com/@yoshhhua" target="_blank" class="link-btn">TikTok</a>
+    <a href="https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH" target="_blank" class="link-btn">Roblox Game</a>
+    <a href="https://www.roblox.com/communities/823010003/Osmium-Studio#!/about" target="_blank" class="link-btn">Roblox Group</a>
+  </div>
 </div>
 
 <audio id="music" src="dabbackwood — сейджуро акаши 2) (www.lightaudio.ru) (1).mp3" autoplay loop></audio>
@@ -105,49 +115,10 @@ function typeWithMistakes(elem, text, speed=50, callback=()=>{}) {
         pos++;
         setTimeout(typeChar, speed);
       }
-    } else {
-      setTimeout(eraseText, 1000);
-    }
-  }
-  function eraseText(){
-    if(elem.textContent.length>0){
-      elem.textContent = elem.textContent.slice(0,-1);
-      setTimeout(eraseText, speed/1.5);
     } else callback();
   }
   typeChar();
 }
-
-// Центральный текст
-const mainText = `Discord: @yoshuanew
-Telegram: @YoshuaNew
-TikTok: https://www.tiktok.com/@yoshhhua
-Roblox Game: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
-Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
-`;
-
-const containerText = document.getElementById('text');
-typeWithMistakes(containerText, mainText, 50, ()=>{});
-
-// Кнопки-ссылки
-const links = [
-  {name:"TikTok", url:"https://www.tiktok.com/@yoshhhua"},
-  {name:"Roblox Game", url:"https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH"},
-  {name:"Roblox Group", url:"https://www.roblox.com/communities/823010003/Osmium-Studio#!/about"},
-];
-
-const linksContainer = document.getElementById('links');
-
-function typeLink(index=0){
-  if(index >= links.length) return;
-  const link = document.createElement('a');
-  link.className = 'link-btn';
-  link.href = links[index].url;
-  link.target = "_blank";
-  linksContainer.appendChild(link);
-  typeWithMistakes(link, links[index].name, 80, ()=>typeLink(index+1));
-}
-typeLink();
 
 // Домен
 const domainElem = document.getElementById('domain');
@@ -184,7 +155,7 @@ document.addEventListener('mousemove', e=>{
   container.style.transform = `translate(-50%,-50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 });
 
-// Плавающая информация по краям
+// Плавающая информация по краям (очень редко)
 const floatingInfo = [
   "Fun Fact: I love coding at night.",
   "Random Info: Favorite number 42.",
@@ -198,20 +169,22 @@ const floatingInfo = [
 ];
 
 function spawnFloatingText(){
-  const info = floatingInfo[Math.floor(Math.random()*floatingInfo.length)];
-  const span = document.createElement('span');
-  span.className = 'floating-text';
-  const side = Math.floor(Math.random()*4);
-  switch(side){
-    case 0: span.style.top="10px"; span.style.left=Math.random()*(window.innerWidth-100)+"px"; break;
-    case 1: span.style.bottom="10px"; span.style.left=Math.random()*(window.innerWidth-100)+"px"; break;
-    case 2: span.style.left="10px"; span.style.top=Math.random()*(window.innerHeight-30)+"px"; break;
-    case 3: span.style.right="10px"; span.style.top=Math.random()*(window.innerHeight-30)+"px"; break;
+  if(Math.random()<0.15){ // 15% шанс появляться каждые интервал
+    const info = floatingInfo[Math.floor(Math.random()*floatingInfo.length)];
+    const span = document.createElement('span');
+    span.className = 'floating-text';
+    const side = Math.floor(Math.random()*4);
+    switch(side){
+      case 0: span.style.top="10px"; span.style.left=Math.random()*(window.innerWidth-150)+"px"; break;
+      case 1: span.style.bottom="10px"; span.style.left=Math.random()*(window.innerWidth-150)+"px"; break;
+      case 2: span.style.left="10px"; span.style.top=Math.random()*(window.innerHeight-30)+"px"; break;
+      case 3: span.style.right="10px"; span.style.top=Math.random()*(window.innerHeight-30)+"px"; break;
+    }
+    document.body.appendChild(span);
+    typeWithMistakes(span, info, 40);
   }
-  document.body.appendChild(span);
-  typeWithMistakes(span, info, 40);
 }
-setInterval(spawnFloatingText, 2500);
+setInterval(spawnFloatingText, 10000); // каждые 10 секунд проверяем
 </script>
 
 </body>
