@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Contacts and Projects</title>
+<style>
+  /* Body setup */
+  body {
+    margin: 0;
+    background-color: black;
+    color: white;
+    font-family: monospace;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 50px;
+  }
+
+  /* Container for avatar and text */
+  .container {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+  }
+
+  /* Avatar styling */
+  .avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: url('avatar.png') center/cover no-repeat;
+    flex-shrink: 0;
+    box-shadow: 0 0 20px white;
+    animation: pulse 2s infinite;
+  }
+
+  /* Pulse animation for avatar */
+  @keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 20px white; }
+    50% { transform: scale(1.05); box-shadow: 0 0 40px white; }
+    100% { transform: scale(1); box-shadow: 0 0 20px white; }
+  }
+
+  /* Text styling */
+  .text {
+    max-width: 600px;
+    font-size: 20px;
+    white-space: pre-line;
+    line-height: 1.5;
+    overflow-wrap: break-word;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+  }
+
+  /* Fade-in animation */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Cursor styling */
+  .cursor {
+    display: inline-block;
+    width: 10px;
+    background-color: white;
+    animation: blink 1s infinite;
+    vertical-align: bottom;
+    margin-left: 2px;
+  }
+
+  @keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0; }
+  }
+
+  /* Optional: add gradient line separator */
+  .separator {
+    height: 2px;
+    width: 100%;
+    background: linear-gradient(to right, white, transparent);
+    margin: 10px 0;
+  }
+
+  /* Scrollbar customization */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: black;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: white;
+    border-radius: 5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="avatar"></div>
+  <div class="text" id="text"></div>
+</div>
+
+<audio id="music" src="music.mp3" autoplay loop></audio>
+
+<script>
+/* Base lines with real links */
+const baseLines = [
+  "Discord: @yoshuanew",
+  "Telegram: @YoshuaNew",
+  "TikTok: https://www.tiktok.com/@yoshhhua",
+  "Roblox Game 1: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH",
+  "Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about",
+  "My interests: Games, design, programming",
+  "Contact for collaboration: business@yoshua.com",
+  "New projects will be added here...",
+  "Stay tuned for updates!"
+];
+
+/* Generate 200 lines by repeating baseLines */
+const lines = [];
+while (lines.length < 200) {
+  const index = lines.length % baseLines.length;
+  lines.push(baseLines[index] + `  (line ${lines.length + 1})`);
+}
+
+let i = 0;
+let lineIndex = 0;
+const speed = 30;
+
+/* Function to type text letter by letter */
+function typeWriter() {
+  const textElement = document.getElementById("text");
+  if (lineIndex < lines.length) {
+    if (i < lines[lineIndex].length) {
+      textElement.innerHTML += lines[lineIndex].charAt(i);
+      i++;
+      setTimeout(typeWriter, speed);
+    } else {
+      textElement.innerHTML += "\n";
+      i = 0;
+      lineIndex++;
+      setTimeout(typeWriter, speed);
+    }
+  }
+}
+
+/* Add blinking cursor */
+const cursor = document.createElement("span");
+cursor.className = "cursor";
+cursor.innerHTML = " ";
+document.getElementById("text").appendChild(cursor);
+
+/* Start typing */
+typeWriter();
+
+/* Optional: Scroll to bottom as text grows */
+const textContainer = document.getElementById("text");
+const observer = new MutationObserver(() => {
+  window.scrollTo(0, document.body.scrollHeight);
+});
+observer.observe(textContainer, { childList: true, subtree: true });
+
+</script>
+
+</body>
+</html>
