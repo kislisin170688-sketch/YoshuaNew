@@ -2,52 +2,55 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Room Effect</title>
+<title>YoshuaNew</title>
 <style>
   body, html {
     margin: 0;
     padding: 0;
-    width: 100%;
     height: 100%;
+    width: 100%;
     background: #000;
     font-family: monospace;
     color: #fff;
-    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    perspective: 1200px;
-  }
-
-  /* Комната */
-  .room {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, #111 0%, #000 80%);
     overflow: hidden;
+    perspective: 1000px;
+    flex-direction: column;
   }
 
-  /* Эффект мерцающего экрана */
-  .screen {
-    width: 700px;
-    border-radius: 20px;
-    background: rgba(0,0,0,0.8);
-    box-shadow: 0 0 50px rgba(255,255,255,0.1);
-    backdrop-filter: blur(5px);
-    padding: 30px;
-    text-align: center;
+  /* Время сверху */
+  #time {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation: flicker 0.15s infinite alternate;
+    top: 20px;
+    font-size: 28px;
+    letter-spacing: 1px;
   }
 
-  @keyframes flicker {
-    0% { background: rgba(0,0,0,0.75); }
-    50% { background: rgba(0,0,0,0.85); }
-    100% { background: rgba(0,0,0,0.8); }
+  /* Домен/название */
+  #domain {
+    position: absolute;
+    top: 60px;
+    font-size: 26px;
+    letter-spacing: 1px;
+  }
+
+  .container {
+    max-width: 700px;
+    padding: 30px;
+    border-radius: 25px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 30px rgba(255,255,255,0.1);
+    text-align: center;
+    font-size: 22px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    transform-style: preserve-3d;
+    transition: transform 0.05s ease-out;
+    margin-top: 120px;
   }
 
   .avatar {
@@ -73,32 +76,24 @@
     0%,50%,100%{opacity:1;}
     25%,75%{opacity:0;}
   }
-
-  /* Границы комнаты */
-  .walls {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: inset 0 0 80px rgba(255,255,255,0.05), inset 0 0 150px rgba(255,255,255,0.03);
-    pointer-events: none;
-  }
 </style>
 </head>
 <body>
 
-<div class="room">
-  <div class="walls"></div>
-  <div class="screen" id="container">
-    <div class="avatar"></div>
-    <div id="text"></div>
-  </div>
+<div id="time"></div>
+<div id="domain"></div>
+
+<div class="container" id="container">
+  <div class="avatar" id="avatar"></div>
+  <div id="text"></div>
 </div>
 
 <audio id="music" src="dabbackwood — сейджуро акаши 2) (www.lightaudio.ru) (1).mp3" autoplay loop></audio>
 
 <script>
+// ------------------------
+// Типинг текста
+// ------------------------
 const text = `Discord: @yoshuanew
 Telegram: @YoshuaNew
 TikTok: https://www.tiktok.com/@yoshhhua
@@ -124,6 +119,80 @@ function typeWriter() {
   }
 }
 typeWriter();
+
+// ------------------------
+// Домен с эффектом печати и удаления
+// ------------------------
+const domainElem = document.getElementById('domain');
+const domains = ["YoshuaNew", "YO_SHUAnew", "YOSHUAnew"];
+let domainIndex = 0;
+
+function typeDomain(text, callback){
+  let pos = 0;
+  function addChar(){
+    if(pos <= text.length){
+      domainElem.textContent = text.substring(0,pos) + "_";
+      pos++;
+      setTimeout(addChar, 150);
+    } else {
+      setTimeout(() => eraseDomain(text, callback), 1000);
+    }
+  }
+  addChar();
+}
+
+function eraseDomain(text, callback){
+  let pos = text.length;
+  function removeChar(){
+    if(pos >= 0){
+      domainElem.textContent = text.substring(0,pos) + "_";
+      pos--;
+      setTimeout(removeChar, 100);
+    } else {
+      callback();
+    }
+  }
+  removeChar();
+}
+
+function nextDomain(){
+  typeDomain(domains[domainIndex], () => {
+    domainIndex = (domainIndex + 1) % domains.length;
+    nextDomain();
+  });
+}
+
+nextDomain();
+
+// ------------------------
+// Время с эффектом печати
+// ------------------------
+const timeElem = document.getElementById('time');
+
+function updateTime(){
+  const now = new Date();
+  let h = String(now.getHours()).padStart(2,"0");
+  let m = String(now.getMinutes()).padStart(2,"0");
+  let s = String(now.getSeconds()).padStart(2,"0");
+  timeElem.textContent = `${h}:${m}:${s}`;
+}
+
+setInterval(updateTime, 1000);
+updateTime();
+
+// ------------------------
+// Вращение контейнера
+// ------------------------
+const container = document.getElementById('container');
+document.addEventListener('mousemove', e => {
+  const centerX = window.innerWidth/2;
+  const centerY = window.innerHeight/2;
+  const deltaX = e.clientX - centerX;
+  const deltaY = e.clientY - centerY;
+  const rotateX = (-deltaY/25).toFixed(2);
+  const rotateY = (deltaX/25).toFixed(2);
+  container.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+});
 </script>
 
 </body>
