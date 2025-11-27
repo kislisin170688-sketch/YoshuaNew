@@ -10,13 +10,12 @@
     padding: 0;
     height: 100%;
     width: 100%;
-    background: #000; /* фон можно заменить на прозрачный, если нужен через rgba(0,0,0,0) */
+    background: #000;
     font-family: monospace;
     color: #fff;
     overflow: hidden;
     perspective: 1000px;
   }
-
   #time { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; letter-spacing: 1px; }
   #domain { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 22px; letter-spacing: 1px; }
 
@@ -25,7 +24,7 @@
     max-width: 700px;
     padding: 20px 25px;
     border-radius: 20px;
-    background: rgba(0,0,0,0.5); /* полупрозрачный контейнер */
+    background: rgba(0,0,0,0.5);
     backdrop-filter: blur(10px);
     box-shadow: 0 0 30px rgba(255,255,255,0.1);
     text-align: left;
@@ -65,7 +64,7 @@
     font-size: 14px;
     opacity: 0.7;
     white-space: nowrap;
-    background: rgba(0,0,0,0.2); /* чуть прозрачный фон у текста для видимости */
+    background: rgba(0,0,0,0.2);
     padding: 2px 5px;
     border-radius: 5px;
   }
@@ -95,7 +94,47 @@
 
 <script>
 // ------------------------
-// Основной контейнерный текст
+// Функция печати с ошибками
+// ------------------------
+function typeWithMistakes(elem, text, speed = 50, callback = ()=>{}) {
+  let pos = 0;
+
+  function typeChar() {
+    if(pos < text.length){
+      // иногда делаем "ошибку"
+      if(Math.random() < 0.1 && pos > 0){
+        // вставляем случайный символ
+        elem.textContent += String.fromCharCode(33 + Math.floor(Math.random()*94));
+        setTimeout(()=>{
+          // удаляем ошибку
+          elem.textContent = elem.textContent.slice(0,-1);
+          setTimeout(typeChar, speed);
+        }, speed*2);
+      } else {
+        elem.textContent += text.charAt(pos);
+        pos++;
+        setTimeout(typeChar, speed);
+      }
+    } else {
+      // после печати удаляем текст с эффектом стирания
+      setTimeout(eraseText, 1000);
+    }
+  }
+
+  function eraseText() {
+    if(elem.textContent.length > 0){
+      elem.textContent = elem.textContent.slice(0,-1);
+      setTimeout(eraseText, speed/1.5);
+    } else {
+      callback();
+    }
+  }
+
+  typeChar();
+}
+
+// ------------------------
+// Центральный текст
 // ------------------------
 const mainText = `Discord: @yoshuanew
 Telegram: @YoshuaNew
@@ -105,58 +144,18 @@ Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
 `;
 
 const containerText = document.getElementById('text');
-let i = 0;
-const speed = 25;
-const cursor = document.createElement('span');
-cursor.className = 'cursor';
-cursor.innerHTML = ' ';
-containerText.appendChild(cursor);
-
-function typeWriter() {
-  if(i < mainText.length){
-    containerText.insertBefore(document.createTextNode(mainText.charAt(i)), cursor);
-    i++;
-    setTimeout(typeWriter, speed);
-  }
-}
-typeWriter();
+typeWithMistakes(containerText, mainText, 50, ()=>{});
 
 // ------------------------
-// Домен
+// Домен с печатью и ошибками
 // ------------------------
 const domainElem = document.getElementById('domain');
 const domains = ["YoshuaNew", "YO_SHUAnew", "YOSHUAnew", "Yoshuaaa"];
 let domainIndex = 0;
 
-function typeDomain(text, callback){
-  let pos = 0;
-  function addChar(){
-    if(pos <= text.length){
-      domainElem.textContent = text.substring(0,pos) + "_";
-      pos++;
-      setTimeout(addChar, 120);
-    } else {
-      setTimeout(() => eraseDomain(text, callback), 800);
-    }
-  }
-  addChar();
-}
-
-function eraseDomain(text, callback){
-  let pos = text.length;
-  function removeChar(){
-    if(pos >= 0){
-      domainElem.textContent = text.substring(0,pos) + "_";
-      pos--;
-      setTimeout(removeChar, 80);
-    } else callback();
-  }
-  removeChar();
-}
-
 function nextDomain(){
-  typeDomain(domains[domainIndex], () => {
-    domainIndex = (domainIndex + 1) % domains.length;
+  typeWithMistakes(domainElem, domains[domainIndex], 120, ()=>{
+    domainIndex = (domainIndex+1)%domains.length;
     nextDomain();
   });
 }
@@ -166,37 +165,12 @@ nextDomain();
 // Время
 // ------------------------
 const timeElem = document.getElementById('time');
-
-function typeTime(text, callback){
-  let pos = 0;
-  function addChar(){
-    if(pos <= text.length){
-      timeElem.textContent = text.substring(0,pos);
-      pos++;
-      setTimeout(addChar, 80);
-    } else setTimeout(() => eraseTime(text, callback), 400);
-  }
-  addChar();
-}
-
-function eraseTime(text, callback){
-  let pos = text.length;
-  function removeChar(){
-    if(pos >= 0){
-      timeElem.textContent = text.substring(0,pos);
-      pos--;
-      setTimeout(removeChar, 50);
-    } else callback();
-  }
-  removeChar();
-}
-
 function updateTimeLoop(){
   const now = new Date();
   let h = String(now.getHours()).padStart(2,"0");
   let m = String(now.getMinutes()).padStart(2,"0");
   let s = String(now.getSeconds()).padStart(2,"0");
-  typeTime(`${h}:${m}:${s}`, updateTimeLoop);
+  typeWithMistakes(timeElem, `${h}:${m}:${s}`, 50, updateTimeLoop);
 }
 updateTimeLoop();
 
@@ -234,7 +208,6 @@ function spawnFloatingText() {
   const span = document.createElement('span');
   span.className = 'floating-text';
 
-  // случайный край: top, bottom, left, right
   const side = Math.floor(Math.random()*4);
   switch(side){
     case 0: span.style.top = "10px"; span.style.left = Math.random()*(window.innerWidth-100)+"px"; break;
@@ -244,21 +217,11 @@ function spawnFloatingText() {
   }
 
   document.body.appendChild(span);
-  typeFloatingText(span, info, 0);
-}
-
-function typeFloatingText(span, text, idx){
-  if(idx <= text.length){
-    span.textContent = text.substring(0, idx) + "_";
-    setTimeout(()=>typeFloatingText(span, text, idx+1), 50 + Math.random()*50);
-  } else {
-    setTimeout(()=>span.remove(), 5000 + Math.random()*3000);
-  }
+  typeWithMistakes(span, info, 40);
 }
 
 // спавн каждые 2 секунды
 setInterval(spawnFloatingText, 2000);
-
 </script>
 </body>
 </html>
