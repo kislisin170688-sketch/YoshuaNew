@@ -10,12 +10,21 @@
     padding: 0;
     height: 100%;
     width: 100%;
-    background: #000;
     font-family: monospace;
     color: #fff;
     overflow: hidden;
     perspective: 1000px;
+    background: linear-gradient(120deg, #0f0f0f, #1a1a1a, #0f0f0f);
+    background-size: 600% 600%;
+    animation: gradientMove 25s ease infinite;
   }
+
+  @keyframes gradientMove {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+
   #time { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; letter-spacing: 1px; }
   #domain { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); font-size: 22px; letter-spacing: 1px; }
 
@@ -50,24 +59,10 @@
     box-shadow: 0 0 20px rgba(255,255,255,0.2);
   }
 
-  .cursor {
-    display: inline-block;
-    width: 10px;
-    background-color: white;
-    animation: blink 1s infinite;
-    vertical-align: bottom;
-    margin-left: 2px;
-  }
-
-  .floating-text {
-    position: absolute;
-    font-size: 14px;
-    opacity: 0.7;
-    white-space: nowrap;
-    background: rgba(0,0,0,0.2);
-    padding: 2px 5px;
-    border-radius: 5px;
-  }
+  .cursor { display: inline-block; width: 10px; background-color: white; animation: blink 1s infinite; vertical-align: bottom; margin-left: 2px; }
+  .floating-text { position: absolute; font-size: 14px; opacity: 0.7; white-space: nowrap; background: rgba(0,0,0,0.2); padding: 2px 5px; border-radius: 5px; }
+  .link-btn { display: inline-block; margin: 5px 10px 0 0; padding: 6px 12px; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; cursor: pointer; font-size: 16px; text-decoration: none; transition: all 0.2s; }
+  .link-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6); }
 
   @keyframes blink { 0%,50%,100%{opacity:1;} 25%,75%{opacity:0;} }
 
@@ -77,6 +72,7 @@
     .container { font-size: 16px; padding: 15px 20px; }
     .avatar { width: 100px; height: 100px; }
     .floating-text { font-size: 12px; }
+    .link-btn { font-size: 14px; padding: 4px 8px; }
   }
 </style>
 </head>
@@ -88,25 +84,19 @@
 <div class="container" id="container">
   <div class="avatar" id="avatar"></div>
   <div id="text"></div>
+  <div id="links"></div>
 </div>
 
 <audio id="music" src="dabbackwood — сейджуро акаши 2) (www.lightaudio.ru) (1).mp3" autoplay loop></audio>
 
 <script>
-// ------------------------
-// Функция печати с ошибками
-// ------------------------
-function typeWithMistakes(elem, text, speed = 50, callback = ()=>{}) {
-  let pos = 0;
-
-  function typeChar() {
+function typeWithMistakes(elem, text, speed=50, callback=()=>{}) {
+  let pos=0;
+  function typeChar(){
     if(pos < text.length){
-      // иногда делаем "ошибку"
-      if(Math.random() < 0.1 && pos > 0){
-        // вставляем случайный символ
-        elem.textContent += String.fromCharCode(33 + Math.floor(Math.random()*94));
+      if(Math.random()<0.1 && pos>0){
+        elem.textContent += String.fromCharCode(33+Math.floor(Math.random()*94));
         setTimeout(()=>{
-          // удаляем ошибку
           elem.textContent = elem.textContent.slice(0,-1);
           setTimeout(typeChar, speed);
         }, speed*2);
@@ -116,26 +106,19 @@ function typeWithMistakes(elem, text, speed = 50, callback = ()=>{}) {
         setTimeout(typeChar, speed);
       }
     } else {
-      // после печати удаляем текст с эффектом стирания
       setTimeout(eraseText, 1000);
     }
   }
-
-  function eraseText() {
-    if(elem.textContent.length > 0){
+  function eraseText(){
+    if(elem.textContent.length>0){
       elem.textContent = elem.textContent.slice(0,-1);
       setTimeout(eraseText, speed/1.5);
-    } else {
-      callback();
-    }
+    } else callback();
   }
-
   typeChar();
 }
 
-// ------------------------
 // Центральный текст
-// ------------------------
 const mainText = `Discord: @yoshuanew
 Telegram: @YoshuaNew
 TikTok: https://www.tiktok.com/@yoshhhua
@@ -146,13 +129,30 @@ Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
 const containerText = document.getElementById('text');
 typeWithMistakes(containerText, mainText, 50, ()=>{});
 
-// ------------------------
-// Домен с печатью и ошибками
-// ------------------------
+// Кнопки-ссылки
+const links = [
+  {name:"TikTok", url:"https://www.tiktok.com/@yoshhhua"},
+  {name:"Roblox Game", url:"https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH"},
+  {name:"Roblox Group", url:"https://www.roblox.com/communities/823010003/Osmium-Studio#!/about"},
+];
+
+const linksContainer = document.getElementById('links');
+
+function typeLink(index=0){
+  if(index >= links.length) return;
+  const link = document.createElement('a');
+  link.className = 'link-btn';
+  link.href = links[index].url;
+  link.target = "_blank";
+  linksContainer.appendChild(link);
+  typeWithMistakes(link, links[index].name, 80, ()=>typeLink(index+1));
+}
+typeLink();
+
+// Домен
 const domainElem = document.getElementById('domain');
 const domains = ["YoshuaNew", "YO_SHUAnew", "YOSHUAnew", "Yoshuaaa"];
-let domainIndex = 0;
-
+let domainIndex=0;
 function nextDomain(){
   typeWithMistakes(domainElem, domains[domainIndex], 120, ()=>{
     domainIndex = (domainIndex+1)%domains.length;
@@ -161,9 +161,7 @@ function nextDomain(){
 }
 nextDomain();
 
-// ------------------------
 // Время
-// ------------------------
 const timeElem = document.getElementById('time');
 function updateTimeLoop(){
   const now = new Date();
@@ -174,23 +172,19 @@ function updateTimeLoop(){
 }
 updateTimeLoop();
 
-// ------------------------
-// Вращение контейнера
-// ------------------------
+// Вращение контейнера за мышкой (чувствительность норм)
 const container = document.getElementById('container');
-document.addEventListener('mousemove', e => {
+document.addEventListener('mousemove', e=>{
   const centerX = window.innerWidth/2;
   const centerY = window.innerHeight/2;
   const deltaX = e.clientX - centerX;
   const deltaY = e.clientY - centerY;
-  const rotateX = (-deltaY/25).toFixed(2);
-  const rotateY = (deltaX/25).toFixed(2);
-  container.style.transform = `translate(-50%, -50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  const rotateX = (-deltaY/60).toFixed(2);
+  const rotateY = (deltaX/60).toFixed(2);
+  container.style.transform = `translate(-50%,-50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 });
 
-// ------------------------
 // Плавающая информация по краям
-// ------------------------
 const floatingInfo = [
   "Fun Fact: I love coding at night.",
   "Random Info: Favorite number 42.",
@@ -203,25 +197,22 @@ const floatingInfo = [
   "Info: Always learning new things."
 ];
 
-function spawnFloatingText() {
+function spawnFloatingText(){
   const info = floatingInfo[Math.floor(Math.random()*floatingInfo.length)];
   const span = document.createElement('span');
   span.className = 'floating-text';
-
   const side = Math.floor(Math.random()*4);
   switch(side){
-    case 0: span.style.top = "10px"; span.style.left = Math.random()*(window.innerWidth-100)+"px"; break;
-    case 1: span.style.bottom = "10px"; span.style.left = Math.random()*(window.innerWidth-100)+"px"; break;
-    case 2: span.style.left = "10px"; span.style.top = Math.random()*(window.innerHeight-30)+"px"; break;
-    case 3: span.style.right = "10px"; span.style.top = Math.random()*(window.innerHeight-30)+"px"; break;
+    case 0: span.style.top="10px"; span.style.left=Math.random()*(window.innerWidth-100)+"px"; break;
+    case 1: span.style.bottom="10px"; span.style.left=Math.random()*(window.innerWidth-100)+"px"; break;
+    case 2: span.style.left="10px"; span.style.top=Math.random()*(window.innerHeight-30)+"px"; break;
+    case 3: span.style.right="10px"; span.style.top=Math.random()*(window.innerHeight-30)+"px"; break;
   }
-
   document.body.appendChild(span);
   typeWithMistakes(span, info, 40);
 }
-
-// спавн каждые 2 секунды
-setInterval(spawnFloatingText, 2000);
+setInterval(spawnFloatingText, 2500);
 </script>
+
 </body>
 </html>
