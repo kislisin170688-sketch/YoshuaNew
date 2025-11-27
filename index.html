@@ -2,73 +2,52 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>3D Background Cube</title>
+<title>Room Effect</title>
 <style>
   body, html {
     margin: 0;
     padding: 0;
-    height: 100%;
     width: 100%;
+    height: 100%;
     background: #000;
     font-family: monospace;
     color: #fff;
     overflow: hidden;
-    perspective: 1200px;
     display: flex;
     justify-content: center;
     align-items: center;
+    perspective: 1200px;
   }
 
-  /* 3D Cube as background of container */
-  .cube {
+  /* Комната */
+  .room {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #111 0%, #000 80%);
+    overflow: hidden;
+  }
+
+  /* Эффект мерцающего экрана */
+  .screen {
+    width: 700px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.8);
+    box-shadow: 0 0 50px rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+    padding: 30px;
+    text-align: center;
     position: absolute;
-    width: 750px; /* чуть больше контейнера */
-    height: 450px; 
-    transform-style: preserve-3d;
     top: 50%;
     left: 50%;
-    margin-left: -375px;
-    margin-top: -225px;
-    pointer-events: none; /* чтобы мышь не блокировала контейнер */
+    transform: translate(-50%, -50%);
+    animation: flicker 0.15s infinite alternate;
   }
 
-  .cube-face {
-    position: absolute;
-    width: 750px;
-    height: 450px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 60px;
-    color: rgba(255,255,255,0.2);
-  }
-
-  .front  { transform: rotateY(  0deg) translateZ(225px); }
-  .back   { transform: rotateY(180deg) translateZ(225px); }
-  .right  { transform: rotateY( 90deg) translateZ(225px); }
-  .left   { transform: rotateY(-90deg) translateZ(225px); }
-  .top    { transform: rotateX( 90deg) translateZ(225px); }
-  .bottom { transform: rotateX(-90deg) translateZ(225px); }
-
-  /* Container with text & avatar */
-  .container {
-    max-width: 700px;
-    padding: 30px;
-    border-radius: 25px;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 30px rgba(255,255,255,0.1);
-    text-align: center;
-    font-size: 22px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    transform-style: preserve-3d;
-    transition: transform 0.05s ease-out;
-    position: relative;
-    z-index: 1;
+  @keyframes flicker {
+    0% { background: rgba(0,0,0,0.75); }
+    50% { background: rgba(0,0,0,0.85); }
+    100% { background: rgba(0,0,0,0.8); }
   }
 
   .avatar {
@@ -94,30 +73,32 @@
     0%,50%,100%{opacity:1;}
     25%,75%{opacity:0;}
   }
+
+  /* Границы комнаты */
+  .walls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 80px rgba(255,255,255,0.05), inset 0 0 150px rgba(255,255,255,0.03);
+    pointer-events: none;
+  }
 </style>
 </head>
 <body>
 
-<!-- 3D Cube Background -->
-<div class="cube" id="cube">
-  <div class="cube-face front">●</div>
-  <div class="cube-face back">○</div>
-  <div class="cube-face right">★</div>
-  <div class="cube-face left">✦</div>
-  <div class="cube-face top">▲</div>
-  <div class="cube-face bottom">▼</div>
-</div>
-
-<!-- Foreground container -->
-<div class="container" id="container">
-  <div class="avatar" id="avatar"></div>
-  <div id="text"></div>
+<div class="room">
+  <div class="walls"></div>
+  <div class="screen" id="container">
+    <div class="avatar"></div>
+    <div id="text"></div>
+  </div>
 </div>
 
 <audio id="music" src="dabbackwood — сейджуро акаши 2) (www.lightaudio.ru) (1).mp3" autoplay loop></audio>
 
 <script>
-// Медленная печать текста
 const text = `Discord: @yoshuanew
 Telegram: @YoshuaNew
 TikTok: https://www.tiktok.com/@yoshhhua
@@ -143,23 +124,6 @@ function typeWriter() {
   }
 }
 typeWriter();
-
-// Вращение контейнера и куба за мышкой
-const container = document.getElementById('container');
-const cube = document.getElementById('cube');
-
-document.addEventListener('mousemove', e => {
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
-  const deltaX = e.clientX - centerX;
-  const deltaY = e.clientY - centerY;
-
-  const rotateX = (-deltaY / 25).toFixed(2);
-  const rotateY = (deltaX / 25).toFixed(2);
-
-  container.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-  cube.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-});
 </script>
 
 </body>
