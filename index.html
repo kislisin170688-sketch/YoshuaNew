@@ -22,49 +22,76 @@ body, html {
   50%{background-position:100% 50%;}
   100%{background-position:0% 50%;}
 }
+
 #enterBtn {
-  padding: 15px 30px;
+  padding: 15px 35px;
   font-size: 20px;
   cursor: pointer;
   background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 15px;
   color: #fff;
-  transition: all 0.2s;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
 }
-#enterBtn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6);}
+#enterBtn:hover {
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.6);
+  transform: scale(1.05) rotate(-2deg);
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 10px rgba(255,255,255,0.2);}
+  50%{box-shadow:0 0 20px rgba(255,255,255,0.5);}
+  100%{box-shadow:0 0 10px rgba(255,255,255,0.2);}
+}
+
 #time, #domain { position: absolute; left: 50%; transform: translateX(-50%); letter-spacing: 1px;}
 #time{ top:20px; font-size:24px;}
 #domain{ top:60px; font-size:22px;}
+
 .container{
-  width: 90%; max-width: 700px;
-  padding: 25px;
-  border-radius: 20px;
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 30px rgba(255,255,255,0.1);
-  text-align: left; font-size:18px; line-height:1.6;
+  width: 80%; max-width: 650px;
+  padding: 20px 20px;
+  border-radius: 18px;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 25px rgba(255,255,255,0.1);
+  text-align: left; font-size:18px; line-height:1.5;
   white-space: pre-wrap; overflow-wrap: break-word;
   transform-style: preserve-3d;
-  transition: transform 0.05s ease-out;
+  transition: transform 0.05s ease-out, opacity 0.5s ease;
   position: absolute; top:50%; left:50%; transform: translate(-50%,-50%);
   display:none;
+  opacity:0;
 }
+
+.container.show{
+  display:block;
+  opacity:1;
+}
+
 .avatar{
-  width:120px; height:120px; border-radius:50%;
+  width:110px; height:110px; border-radius:50%;
   background: url('OsmiumStudio_avatar_gradient.png') center/cover no-repeat;
   margin:0 auto 20px auto; display:block;
   box-shadow:0 0 20px rgba(255,255,255,0.2);
 }
+
 .cursor{ display:inline-block; width:10px; background-color:white; animation: blink 1s infinite; vertical-align:bottom; margin-left:2px;}
 @keyframes blink{0%,50%,100%{opacity:1;}25%,75%{opacity:0;}}
+
 .link-btn { display:inline-block; margin:5px 10px 0 0; padding:6px 12px; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.3); border-radius:8px; cursor:pointer; text-decoration:none; transition: all 0.2s; }
 .link-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6); }
+
 .floating-text{ position:absolute; font-size:14px; opacity:0.7; white-space:nowrap; background: rgba(0,0,0,0.2); padding:2px 5px; border-radius:5px; }
+
 @media(max-width:600px){
   #time{font-size:18px;} #domain{font-size:16px;}
-  .container{font-size:16px; padding:15px 20px;}
-  .avatar{width:100px;height:100px;}
+  .container{font-size:16px; padding:15px 15px;}
+  .avatar{width:90px;height:90px;}
   .floating-text{font-size:12px;}
   .link-btn{font-size:14px; padding:4px 8px;}
 }
@@ -172,7 +199,7 @@ setInterval(spawnFloatingText,10000);
 // ---------------- Enter Button ----------------
 document.getElementById('enterBtn').addEventListener('click',()=>{
   document.getElementById('enterBtn').style.display='none';
-  container.style.display='block';
+  container.classList.add('show');
   document.getElementById('music').play().catch(()=>{});
   nextDomain();
   updateTimeLoop();
