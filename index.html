@@ -2,40 +2,50 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>My Contacts and Projects</title>
+<title>My Contacts</title>
 <style>
-  /* Body and background */
+  /* Body */
   body, html {
     margin: 0;
     padding: 0;
     height: 100%;
+    width: 100%;
     background: #000;
     font-family: monospace;
     color: #fff;
-    overflow-y: auto;
-    perspective: 1px; /* for parallax */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    perspective: 1000px; /* для параллакса */
   }
 
-  /* Parallax section */
-  .parallax {
-    position: relative;
-    transform-style: preserve-3d;
-  }
-
-  /* Glass effect container */
+  /* Glass container */
   .container {
-    max-width: 900px;
-    margin: 50px auto;
+    max-width: 700px;
     padding: 30px;
     border-radius: 25px;
     background: rgba(0,0,0,0.6);
     backdrop-filter: blur(10px);
     box-shadow: 0 0 30px rgba(255,255,255,0.1);
-    text-align: left;
-    font-size: 18px;
+    text-align: center;
+    font-size: 22px;
     line-height: 1.5;
     white-space: pre-wrap;
     overflow-wrap: break-word;
+    transform-style: preserve-3d;
+  }
+
+  /* Avatar */
+  .avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: url('avatar.png') center/cover no-repeat;
+    margin: 0 auto 20px auto;
+    display: block;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    transition: transform 0.1s ease-out;
   }
 
   /* Cursor */
@@ -52,28 +62,16 @@
     0%,50%,100%{opacity:1;}
     25%,75%{opacity:0;}
   }
-
-  /* Avatar */
-  .avatar {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background: url('avatar.png') center/cover no-repeat;
-    margin: 0 auto 20px auto;
-    display: block;
-  }
-
 </style>
 </head>
 <body>
 
-<div class="parallax">
-  <div class="container" id="textContainer">
-    <div class="avatar"></div>
-  </div>
+<div class="container" id="container">
+  <div class="avatar" id="avatar"></div>
+  <div id="text"></div>
 </div>
 
-<audio src="music.mp3" autoplay loop></audio>
+<audio id="music" src="dabbackwood — сейджуро акаши 2) (www.lightaudio.ru) (1).mp3" autoplay loop></audio>
 
 <script>
 const text = `Discord: @yoshuanew
@@ -83,9 +81,10 @@ Roblox Game 1: https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH
 Roblox Group: https://www.roblox.com/communities/823010003/Osmium-Studio#!/about
 `;
 
-const container = document.getElementById('textContainer');
+// Типинг текста
+const container = document.getElementById('text');
 let i = 0;
-const speed = 10; // скорость печати
+const speed = 30;
 
 // Добавляем курсор
 const cursor = document.createElement('span');
@@ -98,12 +97,22 @@ function typeWriter() {
     container.insertBefore(document.createTextNode(text.charAt(i)), cursor);
     i++;
     setTimeout(typeWriter, speed);
-    // прокрутка вниз
     container.scrollTop = container.scrollHeight;
   }
 }
 
 typeWriter();
+
+// Avatar следит за мышкой
+const avatar = document.getElementById('avatar');
+document.addEventListener('mousemove', e => {
+  const rect = avatar.getBoundingClientRect();
+  const x = e.clientX - (rect.left + rect.width/2);
+  const y = e.clientY - (rect.top + rect.height/2);
+  const rotateX = (-y/20).toFixed(2);
+  const rotateY = (x/20).toFixed(2);
+  avatar.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+});
 </script>
 
 </body>
