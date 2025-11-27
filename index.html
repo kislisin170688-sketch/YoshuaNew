@@ -14,82 +14,73 @@ body, html {
   display: flex; justify-content: center; align-items: center;
   perspective: 1000px;
   background: #000;
+  animation: bgFade 40s ease-in-out infinite alternate;
 }
 
-/* Плавный градиент фона */
+/* Плавное переливание фона черный -> темно-серый */
 @keyframes bgFade {
   0% { background-color: #000; }
-  50% { background-color: #222; }
+  50% { background-color: #333; }
   100% { background-color: #000; }
 }
-body {
-  animation: bgFade 30s ease infinite;
-}
 
-/* Canvas для мягких точек */
+/* Canvas для точек */
 #particles {
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  pointer-events:none;
-  z-index:0;
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  pointer-events:none; z-index:0;
 }
 
 /* Enter Button */
 #enterBtn {
-  padding: 15px 35px;
+  padding: 12px 28px;
   font-size: 20px;
   cursor: pointer;
-  background: rgba(255,255,255,0.1);
-  border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 15px;
+  background: rgba(200,200,200,0.1);
+  border: 2px solid rgba(200,200,200,0.3);
+  border-radius: 14px;
   color: #fff;
   text-transform: uppercase;
   font-weight: bold;
   letter-spacing: 1px;
-  transition: all 0.3s ease;
-  animation: pulse 2s infinite;
+  transition: all 0.4s ease;
   position: relative;
   z-index: 1;
+  animation: pulse 3s infinite;
 }
 #enterBtn:hover {
-  background: rgba(255,255,255,0.25);
-  border-color: rgba(255,255,255,0.6);
-  transform: scale(1.05) rotate(-2deg);
+  background: rgba(200,200,200,0.25);
+  border-color: rgba(200,200,200,0.6);
+  transform: scale(1.08) rotate(-1deg);
 }
 @keyframes pulse{
-  0%{box-shadow:0 0 10px rgba(255,255,255,0.2);}
-  50%{box-shadow:0 0 20px rgba(255,255,255,0.5);}
-  100%{box-shadow:0 0 10px rgba(255,255,255,0.2);}
+  0%{box-shadow:0 0 8px rgba(255,255,255,0.2);}
+  50%{box-shadow:0 0 18px rgba(255,255,255,0.4);}
+  100%{box-shadow:0 0 8px rgba(255,255,255,0.2);}
 }
 
 /* Контейнер */
 .container{
-  width: 80%; max-width: 650px;
-  padding: 20px;
-  border-radius: 18px;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 0 25px rgba(255,255,255,0.1);
+  width: 75%; max-width: 600px;
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 25px rgba(255,255,255,0.08);
   text-align: left; font-size:18px; line-height:1.5;
   white-space: pre-wrap; overflow-wrap: break-word;
   transform-style: preserve-3d;
-  transition: transform 0.05s ease-out, opacity 0.5s ease;
+  transition: transform 0.1s ease, opacity 0.6s ease;
   position: absolute; top:50%; left:50%; transform: translate(-50%,-50%);
-  display:none;
-  opacity:0;
-  z-index: 1;
+  display:none; opacity:0;
+  z-index:1;
 }
-.container.show{
-  display:block;
-  opacity:1;
-}
+.container.show{ display:block; opacity:1; }
 
 .avatar{
-  width:110px; height:110px; border-radius:50%;
+  width:100px; height:100px; border-radius:50%;
   background: url('OsmiumStudio_avatar_gradient.png') center/cover no-repeat;
-  margin:0 auto 20px auto; display:block;
-  box-shadow:0 0 20px rgba(255,255,255,0.2);
+  margin:0 auto 18px auto; display:block;
+  box-shadow:0 0 15px rgba(255,255,255,0.15);
 }
 
 /* Курсор для печати */
@@ -99,35 +90,39 @@ body {
 /* Кнопки */
 .link-btn {
   display: inline-block;
-  margin: 8px 12px 0 0;
-  padding: 10px 20px;
+  margin: 8px 10px 0 0;
+  padding: 10px 18px;
   border-radius: 12px;
   font-weight: bold;
   text-transform: uppercase;
   text-decoration: none;
   color: #fff;
-  background: rgba(255,255,255,0.05);
-  border: 2px solid rgba(255,255,255,0.2);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  transition: all 0.3s ease;
+  background: rgba(200,200,200,0.15);
+  border: 2px solid rgba(200,200,200,0.3);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  transition: all 0.4s ease;
   perspective: 1000px;
 }
-.link-btn:hover { transform: translateY(-3px) rotateX(2deg); box-shadow:0 6px 20px rgba(0,0,0,0.5);}
-.link-btn:active { transform: translateY(1px) rotateX(0deg); box-shadow:0 3px 8px rgba(0,0,0,0.4); }
+.link-btn:hover{
+  transform: translateY(-2px) rotateX(1deg);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+.link-btn:active{
+  transform: translateY(1px) rotateX(0deg);
+  box-shadow:0 3px 8px rgba(0,0,0,0.25);
+}
 
-.link-btn.tiktok{ background: linear-gradient(45deg, #69C9D0, #EE1D52); border:none; }
-.link-btn.roblox{ background: linear-gradient(45deg, #FF0000, #CC0000); border:none; }
-.link-btn.group{ background: linear-gradient(45deg, #1E90FF, #00BFFF); border:none; }
+/* Время и домен */
+#time, #domain { position:absolute; left:50%; transform:translateX(-50%); letter-spacing:1px; z-index:1; }
+#time{ top:20px; font-size:24px; }
+#domain{ top:60px; font-size:22px; }
 
-#time, #domain { position: absolute; left:50%; transform:translateX(-50%); letter-spacing:1px; z-index:1; }
-#time{ top:20px; font-size:24px;}
-#domain{ top:60px; font-size:22px;}
-
-.floating-text{ position:absolute; font-size:14px; opacity:0.7; white-space:nowrap; background: rgba(0,0,0,0.2); padding:2px 5px; border-radius:5px; z-index:1; }
+/* Легкая плавающая информация */
+.floating-text{ position:absolute; font-size:14px; opacity:0.7; white-space:nowrap; background: rgba(0,0,0,0.25); padding:2px 5px; border-radius:5px; z-index:1; }
 @media(max-width:600px){
   #time{font-size:18px;} #domain{font-size:16px;}
   .container{font-size:16px; padding:15px;}
-  .avatar{width:90px;height:90px;}
+  .avatar{width:80px;height:80px;}
   .floating-text{font-size:12px;}
   .link-btn{font-size:14px; padding:4px 8px;}
 }
@@ -145,9 +140,9 @@ body {
   <div class="avatar"></div>
   <div id="text"></div>
   <div id="links">
-    <a href="https://www.tiktok.com/@yoshhhua" target="_blank" class="link-btn tiktok">TikTok</a>
-    <a href="https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH" target="_blank" class="link-btn roblox">Roblox Game</a>
-    <a href="https://www.roblox.com/communities/823010003/Osmium-Studio#!/about" target="_blank" class="link-btn group">Group</a>
+    <a href="https://www.tiktok.com/@yoshhhua" target="_blank" class="link-btn">TikTok</a>
+    <a href="https://www.roblox.com/games/139755066781834/1-2-OsmiumHvH" target="_blank" class="link-btn">Roblox Game</a>
+    <a href="https://www.roblox.com/communities/823010003/Osmium-Studio#!/about" target="_blank" class="link-btn">Group</a>
   </div>
 </div>
 
@@ -158,7 +153,6 @@ body {
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-
 const particles = [];
 for(let i=0;i<100;i++){
   particles.push({ x:Math.random()*canvas.width, y:Math.random()*canvas.height, size:Math.random()*2+1, alpha:Math.random()*0.5+0.1 });
@@ -222,7 +216,7 @@ const container = document.getElementById('container');
 document.addEventListener('mousemove',e=>{
   const centerX=window.innerWidth/2, centerY=window.innerHeight/2;
   const deltaX=e.clientX-centerX, deltaY=e.clientY-centerY;
-  const rotateX=(-deltaY/60).toFixed(2), rotateY=(deltaX/60).toFixed(2);
+  const rotateX=(-deltaY/80).toFixed(2), rotateY=(deltaX/80).toFixed(2);
   container.style.transform=`translate(-50%,-50%) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 });
 
@@ -239,7 +233,7 @@ const floatingInfo=[
 "Info: Always learning new things."
 ];
 function spawnFloatingText(){
-  if(Math.random()<0.15){
+  if(Math.random()<0.12){
     const info=floatingInfo[Math.floor(Math.random()*floatingInfo.length)];
     const span=document.createElement('span'); span.className='floating-text';
     const side=Math.floor(Math.random()*4);
@@ -253,7 +247,7 @@ function spawnFloatingText(){
     typeErase(span,info,40,()=>{ span.remove(); });
   }
 }
-setInterval(spawnFloatingText,10000);
+setInterval(spawnFloatingText,12000);
 
 // ---------------- Enter Button ----------------
 document.getElementById('enterBtn').addEventListener('click',()=>{
